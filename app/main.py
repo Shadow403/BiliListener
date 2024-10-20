@@ -5,31 +5,29 @@ from modules.log import logger
 from .worker import init_listen
 from .pusher import _get_uid_rid
 from config import BiliConfig, PathConfig
+from .utils import _r_read_cache, _r_read_uidlist
 
 CACHE_Path = PathConfig.CACHE_Path
 
-def main():
-    with open(CACHE_Path, "r") as x:
-        cache = json.load(x)
+async def main():
+    cache = await _r_read_cache()
     if cache["data"]["listening"] != []:
         with open(CACHE_Path, "w") as x:
             cache["data"]["listening"] = []
             json.dump(cache, x, ensure_ascii=False, indent=4)
 
     while True:
-        with open(PathConfig.UIDLIST_Path, "r") as x:
-            uid_list = json.load(x)
-
+        uid_list = await _r_read_uidlist()
         if uid_list["status"] != True:
             logger.critical(f"[MAIN_LISTENER] 未开启监听")
             break
 
         logger.success("[MAIN_LISTENER] 正在监听")
-        rList = _get_uid_rid(uid_list["data"])
+        rList = await _get_uid_rid(uid_list["data"])
         if rList == []:
+            time.sleep(BiliConfig.QUERYDELAY)
             continue
-        with open(CACHE_Path, "r") as x:
-            cache = json.load(x)
+        cache = await _r_read_cache()
         listening_0 = cache["data"]["listening"]
         listening_1 = []
 
@@ -42,8 +40,6 @@ def main():
             logger.success(f"[MAIN_LISTENER] 开始监听 {uid} ({rid})")
             p = multiprocessing.Process(target=init_listen, args=(uid, rid))
             p.start()
-        with open(CACHE_Path, "r") as x:
-            cache = json.load(x)
         with open(CACHE_Path, "w") as x:
             cache["data"]["listening"] = listening_1
             json.dump(cache, x, ensure_ascii=False, indent=4)

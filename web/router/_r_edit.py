@@ -2,19 +2,20 @@ import json
 from ..base_return import *
 from fastapi import APIRouter
 from config import WebAPI, PathConfig
+from ..utils import _parmTest, _read_uidlist
 
 router = APIRouter(prefix=WebAPI.PREFIX)
 
 @router.get("/add/uid/{uid}")
 async def _r_add(uid):
-    if not uid.isdigit() or uid == "":
-        return ret_200(message="uid must be number")
+    tParm = await _parmTest(uid)
+    if tParm != True:
+        return tParm
     uid = int(uid)
-    with open(PathConfig.UIDLIST_Path, "r") as x:
-        data = json.load(x)
+    data = await _read_uidlist()
     uidlist = data["data"]["uids"]
     if uid in uidlist:
-        return ret_200(message="uid already exist")
+        return ret_203(message="uid already exist")
     uidlist.append(uid)
     with open(PathConfig.UIDLIST_Path, "w") as x:
         json.dump(data, x, ensure_ascii=False, indent=4)
@@ -22,14 +23,14 @@ async def _r_add(uid):
 
 @router.get("/del/uid/{uid}")
 async def _r_del(uid):
-    if not uid.isdigit() or uid == "":
-        return ret_200(message="uid must be number")
+    tParm = await _parmTest(uid)
+    if tParm != True:
+        return tParm
     uid = int(uid)
-    with open(PathConfig.UIDLIST_Path, "r") as x:
-        data = json.load(x)
+    data = await _read_uidlist()
     uidlist = data["data"]["uids"]
     if uid not in uidlist:
-        return ret_200(message="uid not exist")
+        return ret_203(message="uid not exist")
     uidlist.remove(uid)
     with open(PathConfig.UIDLIST_Path, "w") as x:
         json.dump(data, x, ensure_ascii=False, indent=4)

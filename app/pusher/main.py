@@ -1,8 +1,8 @@
 from .api import QueryLive
 
-def _get_uid_rid(uid_list):
+async def _get_uid_rid(uid_list):
     liveList = []
-    rJson = QueryLive(uid_list)
+    rJson = await QueryLive(uid_list)
     if rJson["code"] != 0:
         return liveList
 

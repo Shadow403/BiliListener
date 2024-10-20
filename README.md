@@ -1,14 +1,11 @@
 <div align="center">
-
 <a href="https://github.com/Shadow403/BiliListener">
   <img src="./image/logo.png"alt="LOGO">
 </a>
-
-### _✨ 一个异步B站直播监听程序 ✨_
-
 </div>
 
 ## 📖 简介
+#### ✨ 一个异步B站直播监听程序 ✨
 - 配置项: `Json`
 - 数据库: `SQLite3`
 - API框架: `FastAPI`
@@ -28,7 +25,7 @@ pip install -r requirements.txt
 ```
 
 ## 📝 配置
-- 需修改 `config` 文件夹下的 `config.py` 文件内的 `SESSDATA` 字段 `(填入已登录B站的SESSDATA)`
+- 修改 `config` 文件夹下的 `config.py.example` 重命名为 `config.py` 并修改文件内的 `SESSDATA` 字段 `(填入已登录B站的SESSDATA)`
 
 ## 📌 运行
 - `app.py` 监听入口程序
@@ -74,4 +71,5 @@ BiliListener
 <details>
 <summary> 日志 </summary>
 
-- `v0.1.0` 🎉创世提交
+- `v0.1.0` 🎉 创世提交
+- `v0.1.1` 🧱 监听异步支持

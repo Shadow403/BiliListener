@@ -15,7 +15,7 @@ async def _r_shortjson(uid):
         return tParm
     path, liveData = await _readFile(uid)
     if liveData == False:
-        return ret_202(message="uid not found")
+        return ret_203(message="uid not found")
     shortData = liveData["data"]
     if "0" in shortData:
         del shortData["0"]
@@ -32,7 +32,7 @@ async def _r_db2json(uid, id):
     id = int(id)
     path, liveData = await _readFile(uid)
     if liveData == False:
-        return ret_202(message="uid not found")
+        return ret_203(message="uid not found")
     liveList = liveData["data"]
     recd_num = len(liveList)
     if id >= recd_num:
