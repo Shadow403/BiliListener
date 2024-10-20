@@ -14,3 +14,8 @@ async def _read_uidlist():
     with open(PathConfig.UIDLIST_Path, "r") as x:
         data = json.load(x)
     return data
+
+async def _read_cache():
+    with open(PathConfig.CACHE_Path, "r") as x:
+        cache = json.load(x)
+    return cache
