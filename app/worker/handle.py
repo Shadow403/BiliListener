@@ -13,17 +13,75 @@ _c_gf: int = 0
 _c_gd: int = 0
 _c_sc: int = 0
 _c_pc: int = 0
+_init_commit: bool = False
+
+def _commit_callback(data):
+    global _init_commit
+    global _c_et, _c_dm, _c_gf, _c_gd, _c_sc, _c_pc
+    if _init_commit == False:
+        _c_et += data["_et"]
+        _c_dm += data["_dm"]
+        _c_gf += data["_gf"]
+        _c_gd += data["_gd"]
+        _c_sc += data["_sc"]
+        _c_pc += data["_pc"]
+
+        _init_commit = True
+
+def _commit_total(init_stsp, total, lost):
+    if lost == True:
+        etsp = int(time.time())
+        livedata_path, data = total
+        _commit_callback(data["data"][str(init_stsp)]["total"])
+        data["etsp"] = etsp
+        data["data"][str(init_stsp)] = {
+            "stsp": init_stsp,
+            "etsp": etsp,
+            "lost": lost,
+            "total": {
+                "_et": _c_et,
+                "_dm": _c_dm,
+                "_gf": _c_gf,
+                "_gd": _c_gd,
+                "_sc": _c_sc,
+                "_pc": _c_pc
+            }
+        }
+        with open(livedata_path, "w") as x:
+            json.dump(data, x, ensure_ascii=False, indent=4)
+
+    etsp = int(time.time())
+    livedata_path, data = total
+    data["etsp"] = etsp
+    data["data"][str(init_stsp)] = {
+        "stsp": init_stsp,
+        "etsp": etsp,
+        "lost": lost,
+        "total": {
+            "_et": _c_et,
+            "_dm": _c_dm,
+            "_gf": _c_gf,
+            "_gd": _c_gd,
+            "_sc": _c_sc,
+            "_pc": _c_pc
+        }
+    }
+    with open(livedata_path, "w") as x:
+        json.dump(data, x, ensure_ascii=False, indent=4)
 
 class InitHandler(blivedm.BaseHandler):
-    def __init__(self, uid, room_id, db_session, work_client):
+    def __init__(self, uid, room_id, total, lost, livetime, db_session, work_client):
         self.uid = uid
         self.room_id = room_id
+        self.lost = lost
+        self.total = total
         self.session = db_session
-        self.init_stsp = int(time.time())
+        self.init_stsp = livetime
         self.work_client = work_client
 
     def _on_heartbeat(self, client: blivedm.BLiveClient, message: web_models.HeartbeatMessage):
-        logger.info(f"[WORKER] [{client.room_id}] HB POPPING")
+        logger.info(f"[WORKER] [{client.uid}] HB POPPING")
+        _commit_total(self.init_stsp, self.total, self.lost)
 
     def _on_interact_word(self, client: blivedm.BLiveClient, message: web_models.EnterMessage):
         self.session.add(
@@ -37,7 +95,7 @@ class InitHandler(blivedm.BaseHandler):
         self.session.commit()
         global _c_et
         _c_et += 1
-        logger.info(f"[WORKER] [{client.room_id}] {message.uname}({message.uid}) 进入房间")
+        logger.info(f"[WORKER] [{client.uid}] {message.uname}({message.uid}) 进入房间")
 
     def _on_danmaku(self, client: blivedm.BLiveClient, message: web_models.DanmakuMessage):
         self.session.add(
@@ -52,7 +110,7 @@ class InitHandler(blivedm.BaseHandler):
         self.session.commit()
         global _c_dm
         _c_dm += 1
-        logger.info(f"[WORKER] [{client.room_id}] {message.uname}: {message.msg}")
+        logger.info(f"[WORKER] [{client.uid}] {message.uname}: {message.msg}")
 
     def _on_gift(self, client: blivedm.BLiveClient, message: web_models.GiftMessage):
         t_coin = message.coin_type
@@ -75,7 +133,7 @@ class InitHandler(blivedm.BaseHandler):
         _c_gf += 1
         if t_coin == "gold":
             _c_pc += price
-        logger.info(f"[WORKER] [{client.room_id}] {message.uname} 赠送 {message.gift_name}x{message.num}"
+        logger.info(f"[WORKER] [{client.uid}] {message.uname} 赠送 {message.gift_name}x{message.num}"
               f" ({t_coin}瓜子x{price})")
 
     def _on_buy_guard(self, client: blivedm.BLiveClient, message: web_models.GuardBuyMessage):
@@ -95,7 +153,7 @@ class InitHandler(blivedm.BaseHandler):
         global _c_gd, _c_pc
         _c_gd += 1
         _c_pc += price
-        logger.info(f"[WORKER] [{client.room_id}] {message.username} 购买 {message.gift_name}")
+        logger.info(f"[WORKER] [{client.uid}] {message.username} 购买 {message.gift_name}")
 
     def _on_super_chat(self, client: blivedm.BLiveClient, message: web_models.SuperChatMessage):
         price = message.price * 1000
@@ -114,30 +172,9 @@ class InitHandler(blivedm.BaseHandler):
         global _c_sc, _c_pc
         _c_sc += 1
         _c_pc += price
-        logger.info(f"[WORKER] [{client.room_id}] 醒目留言 {message.price}¥ {message.uname}: {message.message}")
+        logger.info(f"[WORKER] [{client.uid}] 醒目留言 {message.price}¥ {message.uname}: {message.message}")
 
     def _on_preparing(self, client: blivedm.BLiveClient, message: web_models.PreparingMessage):
-        etsp = int(time.time())
-        config = f"{PathConfig.DATA_Path}/{self.uid}/config.json"
-        with open(config, "r") as x:
-            data = json.load(x)
-
-        last_key = str(int(list(data["data"].keys())[-1])+1)
-        data["etsp"] = etsp
-        data["data"][last_key] = {
-            "stsp": self.init_stsp,
-            "etsp": etsp,
-            "total": {
-                "_et": _c_et,
-                "_dm": _c_dm,
-                "_gf": _c_gf,
-                "_gd": _c_gd,
-                "_sc": _c_sc,
-                "_pc": _c_pc
-            }
-        }
-        with open(config, "w") as x:
-            json.dump(data, x, ensure_ascii=False, indent=4)
-
-        logger.warning(f"[WORKER] [{client.room_id}] 房间下播，停止接收消息")
+        _commit_total(self.init_stsp, self.total, self.lost)
+        logger.warning(f"[WORKER] [{client.uid}] [{self.room_id}] 房间下播，停止接收消息")
         self.work_client.stop()

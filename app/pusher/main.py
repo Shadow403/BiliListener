@@ -10,5 +10,6 @@ async def _get_uid_rid(uid_list):
         if value["live_status"] == 1:
             uid = value["uid"]
             room_id = value["room_id"]
-            liveList.append([uid, room_id])
+            live_time = value["live_time"]
+            liveList.append([uid, room_id, live_time])
     return liveList
