@@ -1,5 +1,5 @@
 import uvicorn
-from web import app
+from api import app
 from config import WebAPI
 
 if __name__ == "__main__":
