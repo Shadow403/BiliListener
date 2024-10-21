@@ -137,14 +137,19 @@ class BaseHandler(HandlerInterface):
         if callback is not None:
             callback(self, client, command)
 
-    def _on_interact_word(self, client: ws_base.WebSocketClientBase, message: web_models.EnterMessage):
+    def _on_like_v3_update(self, client: ws_base.WebSocketClientBase, message: web_models.LikeV3UpdateMessage):
         """
-        进入直播间
+        V3点赞更新
         """
 
     def _on_heartbeat(self, client: ws_base.WebSocketClientBase, message: web_models.HeartbeatMessage):
         """
         收到心跳包
+        """
+
+    def _on_interact_word(self, client: ws_base.WebSocketClientBase, message: web_models.EnterMessage):
+        """
+        进入直播间
         """
 
     def _on_danmaku(self, client: ws_base.WebSocketClientBase, message: web_models.DanmakuMessage):

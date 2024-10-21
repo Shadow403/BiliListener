@@ -4,6 +4,7 @@ import json
 from typing import *
 
 __all__ = (
+    'LikeV3UpdateMessage'
     'HeartbeatMessage',
     'EnterMessage',
     'DanmakuMessage',
@@ -14,6 +15,20 @@ __all__ = (
     'PreparingMessage',
 )
 
+@dataclasses.dataclass
+class LikeV3UpdateMessage:
+    """
+    V3点赞更新
+    """
+
+    like_count: int = 0
+    """点赞数"""
+
+    @classmethod
+    def from_command(cls, data: dict):
+        return cls(
+            like_count=data['click_count']
+        )
 
 @dataclasses.dataclass
 class HeartbeatMessage:
