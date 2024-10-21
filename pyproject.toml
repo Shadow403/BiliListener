@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "bililistener"
-version = "0.1.0"
+version = "0.1.3"
 description = "BiliBili异步直播监听程序"
 authors = ["Shadow403 <admin@shadow403.cn>"]
 license = "Apache License 2.0"
