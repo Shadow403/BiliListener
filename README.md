@@ -28,8 +28,8 @@ pip install -r requirements.txt
 - 修改 `config` 文件夹下的 `config.py.example` 重命名为 `config.py` 并修改文件内的 `SESSDATA` 字段 `(填入已登录B站的SESSDATA)`
 
 ## 📌 运行
-- `app.py` 监听入口程序
-- `web.py` 接口入口程序
+- `pusher.py` 监听入口程序
+- `worker.py` 接口入口程序
 
 ## 🎯 功能
 - 入场
@@ -43,28 +43,24 @@ pip install -r requirements.txt
 BiliListener
  ├─app                      [监听程序]
  │  ├─database              [数据库]
- │  ├─pusher                [监听检查]
  │  ├─utils                 [函数]
- │  └─worker
+ │  ├─pusher                [监听检查]
+ │  └─worker                [监听WS]
  ├─config                   [配置文件夹]
  │  └─data
- │     ├─config.py
- │     └─data
- │        ├─uid_list.json   [监听列表]
- │        └─cache.json      [正在监听]
+ │     └─config.py
  ├─data                     [监听数据]
- ├─modules                  [项目依赖]
- │  └─blivedm
- │     ├─clients
- │     └─models
- └─web                      [接口程序]
-     ├─router               [路由]
-     └─utils                [函数]
+ └─modules                  [项目依赖]
+    └─blivedm (package)
 ```
 
 ## 💖 感谢
 - [`xfgryujk/blivedm`](https://github.com/xfgryujk/blivedm)
 
+
+## TODO ⏰
+
+- [] 打包该项目
 
 <br>
 
@@ -76,3 +72,4 @@ BiliListener
 - `v0.1.2` ⚡ 接口优化
 - `v0.1.3` ⚡ `ws` 断线重连后记录的数据恢复 | 添加 `ws` `LIKE_V3_UPDATE`
 - `v0.1.4` ✨ 添加更多记录的数据 `config.json`
+- `v0.1.5` ✨ 整体重构
