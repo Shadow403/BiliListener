@@ -5,12 +5,29 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Python DeBugger",
+            "name": "Pusher 👨🏻‍⚖️",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pusher.py",
+            "cwd": "${workspaceFolder}/app",
+            "console": "integratedTerminal"
+        },
+        {
+            "name": "Worker 👩🏻‍🚒",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "worker.py",
+            "cwd": "${workspaceFolder}/app",
+            "console": "integratedTerminal",
+            "args": []
+        },
+        {
+            "name": "Test 🧪",
             "type": "debugpy",
             "request": "launch",
             "program": "${file}",
             "cwd": "${workspaceFolder}",
-            "console": "integratedTerminal"
+            "console": "integratedTerminal",
         }
     ]
 }
