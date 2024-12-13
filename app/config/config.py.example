@@ -5,7 +5,7 @@ from fastapi.openapi.models import Contact
 class WebAPI:
     HOST: str = "127.0.0.1"
     PORT: int = 5001
-    APPVER: str = "0.1.5"
+    APPVER: str = "0.1.6"
     PREFIX: str = "/api"
     APPNAME: str = "BiliListener"
     _c_404: dict = {"code": 404, "message": "notfound", "data": {}}
@@ -15,7 +15,7 @@ class WebAPI:
     ct_info: Contact = Contact(
         name=APPNAME,
         email="admin@shadow403.cn",
-        url="https://api-dev.shadow403.cn"
+        url="https://live.shadow403.cn"
     )
 
     lc_info: dict = {
@@ -30,6 +30,9 @@ class WebAPI:
     web_oapi: str = "/openapi"
 
 class Router:
+    api_tags: list = ["API 💾"]
+    api_perfix: list = "/api"
+
     info_tags: list = ["INFO 📜"]
     info_perfix: str = "/info"
 
@@ -57,6 +60,8 @@ class BiliConfig:
 class PathConfig:
     __PATH__: str = os.getcwd()
     DATA_Path: str = f"{__PATH__}/data"
+
+
 
 class ASCII:
     pusher: str = f"""
