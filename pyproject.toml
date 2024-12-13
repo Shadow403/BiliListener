@@ -1,42 +1,19 @@
 [tool.poetry]
 name = "BiliListener"
-version = "0.1.5"
+version = "0.1.6"
+package-mode = false
 description = "BiliBili异步直播监听程序"
 authors = ["Shadow403 <admin@shadow403.cn>"]
 license = "Apache License 2.0"
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = ">= 3.10"
+python = ">= 3.10, < 3.12"
 httpx = ">=0.27.2"
 fastapi = ">=0.115.2"
 SQLAlchemy = ">=2.0.36"
 uvicorn = ">=0.32.0"
 apscheduler = ">=3.11.0"
 email-validator = ">=2.2.0"
-blivedm = {path = "modules/blivedm-1.1.0-py3-none-any.whl"}
-
-
-[tool.pdm]
-distribution = false
-
-[project]
-name = "BiliListener"
-version = "0.1.5"
-description = "BiliBili异步直播监听程序"
-authors = [
-    {name = "Shadow403", email = "admin@shadow403.cn"},
-]
-dependencies = [
-    "httpx~=0.27.2",
-    "fastapi~=0.115.2",
-    "SQLAlchemy~=2.0.36",
-    "uvicorn~=0.32.0",
-    "file:///${PROJECT_ROOT}/modules/blivedm-1.1.0-py3-none-any.whl",
-    "apscheduler>=3.11.0",
-    "email-validator>=2.2.0",
-]
-requires-python = ">=3.11"
-readme = "README.md"
-license = {text = "Apache License 2.0"}
-
+blivedm = {path = "modules/blivedm-1.1.1-py3-none-any.whl"}
+pyinstaller = "^6.11.1"
