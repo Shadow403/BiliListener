@@ -36,6 +36,7 @@ class InitHandler(blivedm.BaseHandler):
     def _on_gift(M, client: blivedm.BLiveClient, message: web_models.GiftMessage):
         logger.info(f"[GF] {message.uname} 赠送 {message.gift_name}x{message.num}"
               f" ({message.coin_type}瓜子x{message.total_coin})")
+        M.revert_data.all_gift += 1
         M.db_handle.data_gift(message)
 
     def _on_buy_guard(M, client: blivedm.BLiveClient, message: web_models.GuardBuyMessage):

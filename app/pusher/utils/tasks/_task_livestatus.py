@@ -43,9 +43,7 @@ def live_status_inspectors():
             config_db_session.add(new_live)
             config_db_session.commit()
 
-            # None Tested
-            exec_path = "worker.exe"
-            send_args = [uid, rid, live_time]
-            subprocess.run([exec_path] + send_args)
+            command = f"worker.exe {uid} {rid} {live_time}"
+            subprocess.Popen(["cmd", "/c", command], creationflags=subprocess.CREATE_NEW_CONSOLE)
 
             logger.warning(f"STARTING LISTENING {uid}")
