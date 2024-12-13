@@ -1,11 +1,16 @@
-from .model import *
+import os
 from config import PathConfig
 from sqlalchemy import create_engine
 from contextlib import contextmanager
 from sqlalchemy.orm import scoped_session, sessionmaker
 
+from .model import *
+
 
 def config_database_init():
+    if not os.path.exists(PathConfig.DATA_Path):
+        os.makedirs(PathConfig.DATA_Path)
+
     database_path = f"{PathConfig.DATA_Path}/config.db"
     engine = create_engine(f"sqlite:///{database_path}")
     SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
