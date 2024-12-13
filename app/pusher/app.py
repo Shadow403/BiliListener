@@ -11,7 +11,7 @@ from fastapi.openapi.docs import (
 from .utils import *
 from .base_return import *
 from .router import MRouter
-from config import WebAPI, BiliConfig
+from config import WebAPI, Router, BiliConfig
 from .utils.tasks import live_status_inspectors
 from database.connector import config_database_init
 
@@ -27,7 +27,17 @@ def openapi(self: FastAPI):
     return self.openapi_schema
 FastAPI.openapi = openapi
 
-app = FastAPI()
+app = FastAPI(
+    docs_url=None,
+    redoc_url=None,
+    title=WebAPI.APPNAME,
+    version=WebAPI.APPVER,
+    contact=WebAPI.ct_info,
+    license_info=WebAPI.lc_info,
+    openapi_url=WebAPI.web_oapi,
+    description=WebAPI.web_desc
+)
+
 app.include_router(MRouter)
 db_session = config_database_init()
 
@@ -51,7 +61,7 @@ async def custom_swagger_ui_html():
         swagger_ui_parameters={"defaultModelsExpandDepth": -1}
     )
 
-@app.get("/api", tags=["API 💾"])
+@app.get(Router.api_perfix, tags=Router.api_tags)
 async def read_root():
     return ret_200(data={
         "server_time": func_time(info=True),
