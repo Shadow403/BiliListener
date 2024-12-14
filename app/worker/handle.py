@@ -3,9 +3,7 @@ import blivedm
 from blivedm.log import logger
 from blivedm.models import web as web_models
 
-from database.model import *
 from database.connector import get_db_worker_session
-
 from .database.data_handle import data_handle_v1
 
 
@@ -20,7 +18,7 @@ class InitHandler(blivedm.BaseHandler):
             M.db_handle = data_handle_v1(db, M.uuid)
 
     def _on_heartbeat(M, client: blivedm.BLiveClient, message: web_models.HeartbeatMessage):
-        logger.info(f"[HEART] POPPING & COMMIT DATA")
+        logger.warning(f"[HB] POPPING & COMMIT DATA")
         M.db_handle.data_commit(M.revert_data)
 
     def _on_interact_word(M, client: blivedm.BLiveClient, message: web_models.EnterMessage):
