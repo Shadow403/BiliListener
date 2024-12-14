@@ -11,13 +11,13 @@ from fastapi.openapi.docs import (
 from .utils import *
 from .base_return import *
 from .router import MRouter
+from config import config, Router
 from .router.model._model_api import get_api
-from config import WebAPI, Router, BiliConfig
 from .utils.tasks import live_status_inspectors
 
 
 scheduler = BackgroundScheduler()
-scheduler.add_job(live_status_inspectors, "interval", seconds=BiliConfig.QUERYDELAY)
+scheduler.add_job(live_status_inspectors, "interval", seconds=config.push_query_delay)
 scheduler.start()
 
 _openapi = FastAPI.openapi
@@ -34,12 +34,12 @@ FastAPI.openapi = openapi
 app = FastAPI(
     docs_url=None,
     redoc_url=None,
-    title=WebAPI.APPNAME,
-    version=WebAPI.APPVER,
-    contact=WebAPI.ct_info,
-    license_info=WebAPI.lc_info,
-    openapi_url=WebAPI.web_oapi,
-    description=WebAPI.web_desc
+    title=config.appname,
+    version=config.appver,
+    contact=config.ct_info,
+    license_info=config.lc_info,
+    openapi_url=config.web_oapi,
+    description=config.web_desc
 )
 
 app.include_router(MRouter)
@@ -54,9 +54,9 @@ async def custom_swagger_ui_html():
         openapi_url=app.openapi_url,
         title=app.title,
         oauth2_redirect_url=app.swagger_ui_oauth2_redirect_url,
-        swagger_js_url=WebAPI.sw_jvs,
-        swagger_css_url=WebAPI.sw_css,
-        swagger_favicon_url=WebAPI.sw_ico,
+        swagger_js_url=config.sw_jvs,
+        swagger_css_url=config.sw_css,
+        swagger_favicon_url=config.sw_ico,
         swagger_ui_parameters={"defaultModelsExpandDepth": -1}
     )
 

@@ -1,11 +1,11 @@
 import sys
 
-from config import ASCII
+from config import ASCII_LOGO
 from worker.app import worker_initializer
 
 
 def main():
-    print(ASCII.worker)
+    print(ASCII_LOGO.worker)
 
     args = sys.argv
     if len(args) != 4:

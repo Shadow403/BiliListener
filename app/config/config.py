@@ -1,33 +1,60 @@
 import os
 from fastapi.openapi.models import Contact
 
+from . import __version__
+from .utils import read_config, init_config
 
-class WebAPI:
-    HOST: str = "127.0.0.1"
-    PORT: int = 5001
-    APPVER: str = "0.1.7"
-    PREFIX: str = "/api"
-    APPNAME: str = "BiliListener"
-    _c_404: dict = {"code": 404, "message": "notfound", "data": {}}
-    _c_422: dict = {"code": 422, "message": "parm error | method not allowed", "data": {}}
-    _c_500: dict = {"code": 500, "message": "internal server error", "data": {}}
 
-    ct_info: Contact = Contact(
-        name=APPNAME,
-        email="admin@shadow403.cn",
-        url="https://live.shadow403.cn"
-    )
+class BaseConfig:
+    init_config()
 
-    lc_info: dict = {
-        "name": "Apache License Version 2.0",
-        "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
-    }
+    def __init__(self, config_data):
+        __PATH__: str = os.getcwd()
 
-    sw_ico: str = "https://swagger-cdn.pages.dev/static/favicon.png"
-    sw_css: str = "https://swagger-cdn.pages.dev/static/swagger-ui_v2.css"
-    sw_jvs: str = "https://swagger-cdn.pages.dev/static/swagger-ui-bundle_v2.js"
-    web_desc: str = "Application Programming Interface 📡"
-    web_oapi: str = "/openapi"
+        self.host = config_data["api"]["host"]
+        self.port = config_data["api"]["port"]
+        self.appver: str = __version__
+        self.perfix: str = "/api"
+        self.appname: str = "BiliListener"
+        self._c_404: dict = {"code": 404, "message": "notfound", "data": {}}
+        self._c_422: dict = {"code": 422, "message": "parm error | method not allowed", "data": {}}
+        self._c_500: dict = {"code": 500, "message": "internal server error", "data": {}}
+
+        self.ct_info: Contact = Contact(
+            name=self.appname,
+            email="admin@shadow403.cn",
+            url="https://live.shadow403.cn"
+        )
+
+        self.lc_info: dict = {
+            "name": "Apache License Version 2.0",
+            "url": "https://www.apache.org/licenses/LICENSE-2.0.html",
+        }
+
+        self.sw_ico: str = "https://swagger-cdn.pages.dev/static/favicon.png"
+        self.sw_css: str = "https://swagger-cdn.pages.dev/static/swagger-ui_v2.css"
+        self.sw_jvs: str = "https://swagger-cdn.pages.dev/static/swagger-ui-bundle_v2.js"
+        self.web_desc: str = "Application Programming Interface 📡"
+        self.web_oapi: str = "/openapi"
+
+        self._et: int = 1000
+        self._dm: int = 1001
+        self._gf: int = 1002
+        self._gd: int = 1003
+        self._sc: int = 1004
+
+        self.httpx_headers: dict = {
+            "Accept": "*/*",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36 Edg/103.0.1264.41"
+        }
+        self.auth = config_data["auth"]
+        self.live_push_url: str = "https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids"
+        self.push_query_delay = config_data["query_delay"]
+
+        self.data_path = f"{__PATH__}/{config_data['data']['path']}"
+
+config: BaseConfig = BaseConfig(read_config())
+
 
 class Router:
     api_tags: list = ["API 💾"]
@@ -42,44 +69,3 @@ class Router:
     livelogs_tags: list = ["LIVELOGS 📚"]
     livelogs_perfix: str = "/live"
 
-class BiliConfig:
-    _et: int = 1000
-    _dm: int = 1001
-    _gf: int = 1002
-    _gd: int = 1003
-    _sc: int = 1004
-
-    HEADERS: dict = {
-        "Accept": "*/*",
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36 Edg/103.0.1264.41"
-    }
-    QUERYDELAY: int = 30
-    LIVE_NOTICE: str = "https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids"
-
-class PathConfig:
-    __PATH__: str = os.getcwd()
-    DATA_Path: str = f"{__PATH__}/data"
-    CONF_Path: str = f"{__PATH__}/config.yml"
-
-
-class ASCII:
-    pusher: str = f"""
-______  _  _  _  _      _       _                            
-| ___ \\(_)| |(_)| |    (_)     | |                           
-| |_/ / _ | | _ | |     _  ___ | |_   ___  _ __    ___  _ __ 
-| ___ \\| || || || |    | |/ __|| __| / _ \\| '_ \\  / _ \\| '__|
-| |_/ /| || || || |____| |\\__ \\| |_ |  __/| | | ||  __/| |   
-\\____/ |_||_||_|\\_____/|_||___/ \\__| \\___||_| |_| \\___||_|   
-                                                             
-version {WebAPI.APPVER}
-"""
-
-    worker: str = f"""
- __     __     ______    
-/\\ \\  _ \\ \\   /\\  ___\\   
-\\ \\ \\/ ".\\ \\  \\ \\___  \\  
- \\ \\__/".~\\_\\  \\/\\_____\\ 
-  \\/_/   \\/_/   \\/_____/ 
-
-version {WebAPI.APPVER}
-"""

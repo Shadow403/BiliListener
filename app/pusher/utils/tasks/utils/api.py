@@ -1,12 +1,12 @@
 import httpx
-from config import BiliConfig
+from config import config
 
 HTTPClient = httpx.Client(
         verify=False,
         timeout=None,
-        headers=BiliConfig.HEADERS
+        headers=config.httpx_headers
     )
 
 def api_query_live_status(uid_list):
-    ret = HTTPClient.post(BiliConfig.LIVE_NOTICE, json=uid_list).json()
+    ret = HTTPClient.post(config.live_push_url, json=uid_list).json()
     return ret

@@ -3,8 +3,8 @@ import blivedm
 from blivedm.log import logger
 from blivedm.models import web as web_models
 
+from .database.data_handle import data_commit_handle
 from database.connector import get_db_worker_session
-from .database.data_handle import data_handle_v1
 
 
 class InitHandler(blivedm.BaseHandler):
@@ -14,8 +14,7 @@ class InitHandler(blivedm.BaseHandler):
         M.room_id = room_id
         M.work_client = work_client
         M.revert_data = revert_data
-        with get_db_worker_session(f"{uid}/{uuid}") as db:
-            M.db_handle = data_handle_v1(db, M.uuid)
+        M.db_handle = data_commit_handle(uid, uuid)
 
     def _on_heartbeat(M, client: blivedm.BLiveClient, message: web_models.HeartbeatMessage):
         logger.warning(f"[HB] POPPING & COMMIT DATA")

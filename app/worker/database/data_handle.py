@@ -1,15 +1,16 @@
-from config import BiliConfig
+from config import config
 from .utils import func_formate_ts
 
 from database.model import *
 from database.utils import func_timestamp
-from database.connector import get_db_config_session
+from database.connector import get_db_config_session, get_db_worker_session
 
 
-class data_handle_v1:
-    def __init__(self, db, uuid):
-        self.db = db
+class data_commit_handle:
+    def __init__(self, uid, uuid):
         self.uuid = uuid
+        with get_db_worker_session(f"{uid}/{uuid}") as worker_db_session:
+            self.db = worker_db_session
 
     def data_commit(self, x):
         d = self.db.query(LIVE_STATISTICS).filter(LIVE_STATISTICS.uuid == self.uuid).first()
@@ -24,7 +25,7 @@ class data_handle_v1:
         row = LIVE_LOGS(
             uid=x.uid,
             name=x.uname,
-            type=BiliConfig._et,
+            type=config._et,
             timestamp= x.timestamp
         )
         self.db.add(row)
@@ -33,7 +34,7 @@ class data_handle_v1:
         row = LIVE_LOGS(
             uid=x.uid,
             name=x.uname,
-            type=BiliConfig._dm,
+            type=config._dm,
             inner_type=x.dm_type,
             message=x.msg,
             timestamp= func_formate_ts(x.timestamp)
@@ -44,7 +45,7 @@ class data_handle_v1:
         row = LIVE_LOGS(
             uid=x.uid,
             name=x.uname,
-            type=BiliConfig._gf,
+            type=config._gf,
             gift_id=x.gift_id,
             gift_name=x.gift_name,
             count=x.num,
@@ -57,14 +58,14 @@ class data_handle_v1:
     def data_guard(self, x):
         row = LIVE_LOGS(
             uid=x.uid,
-            name=x.uname,
-            type=BiliConfig._gd,
+            name=x.username,
+            type=config._gd,
             inner_type=x.guard_level,
             gift_id=x.gift_id,
             gift_name=x.gift_name,
             coin_type="gold",
             price=x.price,
-            timestamp= x.timestamp
+            timestamp= x.start_time
         )
         self.db.add(row)
 
@@ -72,11 +73,11 @@ class data_handle_v1:
         row = LIVE_LOGS(
             uid=x.uid,
             name=x.uname,
-            type=BiliConfig._sc,
+            type=config._sc,
             message=x.message,
             coin_type="gold",
             price=int(x.price) * 1000,
-            timestamp= x.timestamp
+            timestamp= x.start_time
         )
         self.db.add(row)
 

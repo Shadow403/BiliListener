@@ -1,6 +1,6 @@
 import os
 
-from config import PathConfig
+from config import config
 
 from database.utils import func_generate_uuid
 from database.model import LIVE_STATISTICS, LIVE_DATA
@@ -11,8 +11,8 @@ def worker_db_initializer(live_uid, live_timestamp):
     uuid = f"{live_uid}000{live_timestamp}"
     uuid_str = func_generate_uuid(uuid)
 
-    if not os.path.exists(f"{PathConfig.DATA_Path}/{live_uid}"):
-        os.makedirs(f"{PathConfig.DATA_Path}/{live_uid}")
+    if not os.path.exists(f"{config.data_path}/{live_uid}"):
+        os.makedirs(f"{config.data_path}/{live_uid}")
 
     db_name_path = f"{live_uid}/{uuid_str}"
     with get_db_worker_session(db_name_path) as worker_db_session:
