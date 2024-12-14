@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "BiliListener"
-version = "0.1.6"
+version = "0.1.7"
 package-mode = false
 description = "BiliBili异步直播监听程序"
 authors = ["Shadow403 <admin@shadow403.cn>"]
