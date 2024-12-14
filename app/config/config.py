@@ -5,7 +5,7 @@ from fastapi.openapi.models import Contact
 class WebAPI:
     HOST: str = "127.0.0.1"
     PORT: int = 5001
-    APPVER: str = "0.1.6"
+    APPVER: str = "0.1.7"
     PREFIX: str = "/api"
     APPNAME: str = "BiliListener"
     _c_404: dict = {"code": 404, "message": "notfound", "data": {}}
@@ -54,13 +54,12 @@ class BiliConfig:
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36 Edg/103.0.1264.41"
     }
     QUERYDELAY: int = 30
-    SESSDATA: str = "<SESSDATA>"
     LIVE_NOTICE: str = "https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids"
 
 class PathConfig:
     __PATH__: str = os.getcwd()
     DATA_Path: str = f"{__PATH__}/data"
-
+    CONF_Path: str = f"{__PATH__}/config.yml"
 
 
 class ASCII:

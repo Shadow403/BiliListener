@@ -4,7 +4,7 @@ import http.cookies
 from typing import Optional
 
 from .handle import InitHandler
-from config.config import BiliConfig
+from config.utils import read_config
 
 
 session: Optional[aiohttp.ClientSession] = None
@@ -18,7 +18,7 @@ async def started_listening_initializer(uid, uuid, room_id, revert_data):
 
 async def session_initializer():
     cookies = http.cookies.SimpleCookie()
-    cookies["SESSDATA"] = BiliConfig.SESSDATA
+    cookies["SESSDATA"] = read_config()
     cookies["SESSDATA"]["domain"] = "bilibili.com"
 
     global session

@@ -17,3 +17,4 @@ apscheduler = ">=3.11.0"
 email-validator = ">=2.2.0"
 blivedm = {path = "modules/blivedm-1.1.1-py3-none-any.whl"}
 pyinstaller = "^6.11.1"
+pyyaml = "^6.0.2"

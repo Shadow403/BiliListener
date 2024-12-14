@@ -14,7 +14,11 @@ from .router import MRouter
 from .router.model._model_api import get_api
 from config import WebAPI, Router, BiliConfig
 from .utils.tasks import live_status_inspectors
-from database.connector import config_database_init
+
+
+scheduler = BackgroundScheduler()
+scheduler.add_job(live_status_inspectors, "interval", seconds=BiliConfig.QUERYDELAY)
+scheduler.start()
 
 _openapi = FastAPI.openapi
 def openapi(self: FastAPI):
@@ -39,11 +43,6 @@ app = FastAPI(
 )
 
 app.include_router(MRouter)
-db_session = config_database_init()
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(live_status_inspectors, "interval", seconds=BiliConfig.QUERYDELAY)
-scheduler.start()
 
 @app.get(app.swagger_ui_oauth2_redirect_url, include_in_schema=False)
 async def swagger_ui_redirect():
