@@ -47,11 +47,13 @@ class BaseConfig:
             "Accept": "*/*",
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36 Edg/103.0.1264.41"
         }
-        self.auth = config_data["auth"]
+        self.auth: str = config_data["auth"]
         self.live_push_url: str = "https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids"
-        self.push_query_delay = config_data["query_delay"]
+        self.push_query_delay: int = config_data["query_delay"]
 
-        self.data_path = f"{__PATH__}/{config_data['data']['path']}"
+        self.data_path: str = f"{__PATH__}/{config_data['data']['path']}"
+
+        self.debug: bool = config_data["debug"]
 
 config: BaseConfig = BaseConfig(read_config())
 
@@ -59,6 +61,9 @@ config: BaseConfig = BaseConfig(read_config())
 class Router:
     api_tags: list = ["API 💾"]
     api_perfix: list = "/api"
+
+    stats_tags: list = ["STATS 📈"]
+    stats_perfix: str = "/stats"
 
     info_tags: list = ["INFO 📜"]
     info_perfix: str = "/info"

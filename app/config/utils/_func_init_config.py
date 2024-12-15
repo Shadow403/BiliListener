@@ -17,7 +17,8 @@ def init_config():
         },
         "auth": {
             "sessdata": ""
-        }
+        },
+        "debug": False
     }
 
     config_path = "config.yml"
