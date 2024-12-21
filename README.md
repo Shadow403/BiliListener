@@ -41,16 +41,17 @@ poetry install
 ```bash
 BiliListener
  ├─app                      [监听程序]
+ │  ├─config                [配置文件夹]
  │  ├─database              [数据库]
- │  ├─utils                 [函数]
  │  ├─pusher                [监听检查]
- │  └─worker                [监听WS]
- ├─config                   [配置文件夹]
- │  └─data
- │     └─config.py
- ├─data                     [监听数据]
- └─modules                  [项目依赖]
-    └─blivedm (package)
+ │  ├─worker                [监听WS]
+ │  └─data                  [监听数据]
+ ├─modules                  [项目依赖]
+ │  └─blivedm (package)
+ ├─scripts
+ │  └─build_[scripts].bat   [打包脚本]
+ └─web
+    └─frontend              [前端]
 ```
 
 ## 💖 感谢
