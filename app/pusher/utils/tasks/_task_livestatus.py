@@ -19,7 +19,7 @@ def live_status_inspectors():
             uid = x["uid"]
             rid = x["room_id"]
             live_time = x["live_time"]
-            uuid = func_generate_uuid(f"{uid}000{live_time}")
+            uuid = func_generate_uuid(uid, live_time)
             new_live = LIVE_DATA(
                 uid = uid,
                 uuid = uuid,

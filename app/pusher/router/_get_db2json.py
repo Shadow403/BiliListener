@@ -66,11 +66,11 @@ async def get_live_logs(
 
         full_data = {
             "live_config": {
-                    "now": page,
-                    "page": total_pages,
-                    "base": live_config_data.live_data_json(),
-                    "statistics": live_statistics_json
-                },
+                "page_current": page,
+                "page_lasted": total_pages,
+                "base": live_config_data.live_data_json(),
+                "statistics": live_statistics_json
+            },
             "live_logs": live_logs_json_chunks
         }
 

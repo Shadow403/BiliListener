@@ -104,6 +104,12 @@ class LIVE_DATA(config_base):
     if_full = Column(Boolean, default=True)
     is_finished = Column(Boolean, default=False)
 
+    all_gift = Column(Integer, default=0)        # 1002
+    all_enter = Column(Integer, default=0)       # 1000
+    all_guard = Column(Integer, default=0)       # 1003
+    all_danmaku = Column(Integer, default=0)     # 1001
+    all_superchat = Column(Integer, default=0)   # 1004
+
     start_timestamp = Column(Integer, default=func_timestamp())
     end_timestamp = Column(Integer, default=0)
 
@@ -127,6 +133,12 @@ class LIVE_DATA(config_base):
 
             "if_full": self.if_full,
             "is_finished": self.is_finished,
+
+            "all_gift": self.all_gift,
+            "all_enter": self.all_enter,
+            "all_guard": self.all_guard,
+            "all_danmaku": self.all_danmaku,
+            "all_superchat": self.all_superchat,
 
             "start_timestamp": self.start_timestamp,
             "end_timestamp": self.end_timestamp

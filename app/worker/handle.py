@@ -4,7 +4,6 @@ from blivedm.log import logger
 from blivedm.models import web as web_models
 
 from .database.data_handle import data_commit_handle
-from database.connector import get_db_worker_session
 
 
 class InitHandler(blivedm.BaseHandler):
@@ -49,6 +48,6 @@ class InitHandler(blivedm.BaseHandler):
     def _on_preparing(M, client: blivedm.BLiveClient, message: web_models.PreparingMessage):
         logger.warning(f"[END] [{M.room_id}] 房间下播，停止接收消息")
         M.db_handle.data_commit(M.revert_data)
-        M.db_handle.data_finish()
+        M.db_handle.data_finish(M.revert_data)
         M.work_client.stop()
         sys.exit()

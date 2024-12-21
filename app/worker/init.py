@@ -8,8 +8,7 @@ from database.connector import get_db_worker_session, get_db_config_session
 
 
 def worker_db_initializer(live_uid, live_timestamp):
-    uuid = f"{live_uid}000{live_timestamp}"
-    uuid_str = func_generate_uuid(uuid)
+    uuid_str = func_generate_uuid(live_uid, live_timestamp)
 
     if not os.path.exists(f"{config.data_path}/{live_uid}"):
         os.makedirs(f"{config.data_path}/{live_uid}")

@@ -8,9 +8,12 @@ from database.connector import get_db_config_session, get_db_worker_session
 
 class data_commit_handle:
     def __init__(self, uid, uuid):
+        self.uid = uid
         self.uuid = uuid
         with get_db_worker_session(f"{uid}/{uuid}") as worker_db_session:
             self.db = worker_db_session
+        with get_db_config_session() as config_db_session:
+            self.cdb = config_db_session
 
     def data_commit(self, x):
         d = self.db.query(LIVE_STATISTICS).filter(LIVE_STATISTICS.uuid == self.uuid).first()
@@ -81,9 +84,17 @@ class data_commit_handle:
         )
         self.db.add(row)
 
-    def data_finish(self):
-        with get_db_config_session() as db:
-            x = db.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
-            x.is_finished = True
-            x.end_timestamp = func_timestamp()
-            db.commit()
+    def data_finish(self, x):
+        d = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
+        d.all_gift=x.all_gift
+        d.all_enter=x.all_enter
+        d.all_guard=x.all_guard
+        d.all_danmaku=x.all_danmaku
+        d.all_superchat=x.all_superchat
+        d.is_finished = True
+        d.end_timestamp = func_timestamp()
+
+        c = self.cdb.query(UIDS).filter(UIDS.uid == self.uid).first()
+        c.is_live = False
+
+        self.cdb.commit()

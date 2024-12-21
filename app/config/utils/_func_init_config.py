@@ -13,7 +13,7 @@ def init_config():
         },
         "query_delay": 30,
         "data": {
-            "path": "/data"
+            "path": "data"
         },
         "auth": {
             "sessdata": ""
