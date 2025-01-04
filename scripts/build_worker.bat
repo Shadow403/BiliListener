@@ -1,4 +1,8 @@
 @echo off
-title Building Dist......
+title Building worker......
 
-cd .. && .venv\Scripts\activate && cd app && pyinstaller --onefile worker.py
+cd ..
+call .venv\Scripts\activate
+cd app
+pyinstaller -i ../scripts/ico/websocket.ico --onefile worker.py
+pause
