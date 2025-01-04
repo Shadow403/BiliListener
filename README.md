@@ -15,6 +15,7 @@
 git clone https://github.com/Shadow403/BiliListener.git
 cd BiliListener
 pip install poetry
+poetry config virtualenvs.in-project true
 poetry install
 ```
 
@@ -79,3 +80,4 @@ BiliListener
 - `v0.1.7` 🛠️ 支持配置文件
 - `v0.1.8` 🛠️ 支持更多配置项 🐍 修复数据库 `commit.handle` `Bugs`
 - `v0.1.9-b1` 🌐 添加前端
+- `v0.1.9-b2` 📦 添加打包图标 `(ico)`
