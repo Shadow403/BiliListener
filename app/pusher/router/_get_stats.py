@@ -8,10 +8,11 @@ from database import *
 from database.model import *
 from database.connector import get_db_config_session
 
+from .model._model_total import get_total
 
 router = APIRouter(prefix=Router.stats_perfix, tags=Router.stats_tags)
 
-@router.get("/total")
+@router.get("/total", response_model=get_total)
 async def get_total_():
     with get_db_config_session() as config_db_session:
         count = len(config_db_session.query(LIVE_DATA).filter(LIVE_DATA.end_timestamp != 0).all())
