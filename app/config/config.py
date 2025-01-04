@@ -2,12 +2,10 @@ import os
 from fastapi.openapi.models import Contact
 
 from . import __version__
-from .utils import read_config, init_config
+from .utils import read_config
 
 
 class BaseConfig:
-    init_config()
-
     def __init__(self, config_data):
         __PATH__: str = os.getcwd()
 
