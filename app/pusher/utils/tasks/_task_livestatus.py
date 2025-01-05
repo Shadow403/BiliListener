@@ -45,7 +45,7 @@ def live_status_inspectors():
 
             command = f"worker.exe {uid} {rid} {live_time}"
 
-            if config.console:
+            if config.hide_console:
                 subprocess.Popen(["cmd", "/c", command], creationflags=subprocess.CREATE_NO_WINDOW)
             else:
                 subprocess.Popen(["cmd", "/c", command], creationflags=subprocess.CREATE_NEW_CONSOLE)
