@@ -2,13 +2,13 @@ from sqlalchemy import func
 from fastapi import APIRouter
 
 from config import Router
-from ..base_return import *
+from ...base_return import *
 
 from database import *
 from database.model import *
 from database.connector import get_db_config_session
 
-from .model._model_total import get_total
+from ..model.v1._model_total import get_total
 
 router = APIRouter(prefix=Router.stats_perfix, tags=Router.stats_tags)
 
@@ -37,4 +37,3 @@ async def get_total_():
         }
 
         return ret_200(full_data)
- 

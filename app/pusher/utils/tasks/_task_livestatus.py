@@ -1,10 +1,8 @@
 import subprocess
-from fastapi.logger import logger
-
-from .utils import func_get_live_status
+from blivedm import logger
 
 from config import config
-
+from .utils import func_get_live_status
 from database.model import UIDS, LIVE_DATA
 from database.utils import func_generate_uuid
 from database.connector import get_db_config_session

@@ -1,1 +1,2 @@
 from ._task_livestatus import live_status_inspectors
+from ._task_liveclear import live_clear_inspectors

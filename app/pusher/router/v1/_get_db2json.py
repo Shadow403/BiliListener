@@ -3,14 +3,14 @@ from typing import Optional
 from fastapi import APIRouter
 
 from config import Router
-from ..base_return import *
+from ...base_return import *
 
 from database import *
 from database.model import *
 from database.connector import get_db_config_session, get_db_worker_session
 
-from .model._model_db2json_data import get_data_db2json
-from .model._model_db2json_config import get_config_db2json
+from ..model.v1._model_db2json_data import get_data_db2json
+from ..model.v1._model_db2json_config import get_config_db2json
 
 
 router = APIRouter(prefix=Router.livelogs_perfix, tags=Router.livelogs_tags)

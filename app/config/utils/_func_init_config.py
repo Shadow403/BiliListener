@@ -10,9 +10,10 @@ def init_config():
     data = {
         "api": {
             "host": "127.0.0.1",
-            "port": 5000
+            "port": 5700
         },
-        "query_delay": 30,
+        "live_query_delay": 30,
+        "live_clear_delay": 86400,
         "data": {
             "path": "data"
         },
@@ -20,7 +21,7 @@ def init_config():
             "sessdata": ""
         },
         "debug": False,
-        "console": False
+        "hide_console": True
     }
 
     if not os.path.exists(path):

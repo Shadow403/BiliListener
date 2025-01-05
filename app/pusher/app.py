@@ -10,14 +10,15 @@ from fastapi.openapi.docs import (
 
 from .utils import *
 from .base_return import *
+from config import config
 from .router import MRouter
-from config import config, Router
-from .router.model._model_api import get_api
-from .utils.tasks import live_status_inspectors
+from .router.model.v1._model_api import get_api
+from .utils.tasks import live_status_inspectors, live_clear_inspectors
 
 
 scheduler = BackgroundScheduler()
 scheduler.add_job(live_status_inspectors, "interval", seconds=config.push_query_delay)
+scheduler.add_job(live_clear_inspectors, "interval", seconds=config.live_clear_delay)
 scheduler.start()
 
 _openapi = FastAPI.openapi
@@ -60,7 +61,7 @@ async def custom_swagger_ui_html():
         swagger_ui_parameters={"defaultModelsExpandDepth": -1}
     )
 
-@app.get(Router.api_perfix, tags=Router.api_tags, response_model=get_api)
+@app.get(config.perfix, tags=config.tags, response_model=get_api)
 async def read_root():
     return ret_200(data={
         "server_time": func_time(info=True),

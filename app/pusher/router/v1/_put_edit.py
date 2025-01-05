@@ -1,14 +1,14 @@
 from fastapi import APIRouter
 
 from config import Router
-from ..base_return import *
+from ...base_return import *
 
 from database import *
 from database.model import UIDS
 from database.connector import get_db_config_session
 
-from .model._model_edit_add import put_add_uid
-from .model._model_del_uid import put_delete_uid
+from ..model.v1._model_edit_add import put_add_uid
+from ..model.v1._model_del_uid import put_delete_uid
 
 
 router = APIRouter(prefix=Router.edit_perfix, tags=Router.edit_tags)
@@ -25,8 +25,8 @@ async def put_add_uid_(
         else:
             new_uid = UIDS(
                     uid=uid,
-                    is_live = 0,
-                    is_ban = 0
+                    is_live=False,
+                    is_ban=False
                 )
             session.add(new_uid)
             session.commit()
