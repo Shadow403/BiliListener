@@ -6,27 +6,28 @@ from ..logo import ASCII_LOGO
 
 
 def init_config():
+    path = 'config.yml'
     data = {
         "api": {
             "host": "127.0.0.1",
-            "port": 5000
+            "port": 5700
         },
-        "query_delay": 30,
+        "live_query_delay": 30,
+        "live_clear_delay": 86400,
         "data": {
             "path": "data"
         },
         "auth": {
             "sessdata": ""
         },
-        "debug": False
+        "debug": False,
+        "hide_console": True
     }
 
-    config_path = "config.yml"
-
-    if not os.path.exists(config_path):
-        with open(config_path, "w") as f:
+    if not os.path.exists(path):
+        with open(path, "w") as f:
             yaml.dump(data, f, default_flow_style=False)
         print(ASCII_LOGO.pusher)
-        print("config.yml 文件已生成, 请填写SESSDATA\n")
+        print(f"{path} 文件已生成, 请填写SESSDATA\n")
         os.system("pause")
         sys.exit(0)

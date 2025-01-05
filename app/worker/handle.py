@@ -7,47 +7,47 @@ from .database.data_handle import data_commit_handle
 
 
 class InitHandler(blivedm.BaseHandler):
-    def __init__(M, uid, uuid, room_id, revert_data, work_client):
-        M.uid = uid
-        M.uuid = uuid
-        M.room_id = room_id
-        M.work_client = work_client
-        M.revert_data = revert_data
-        M.db_handle = data_commit_handle(uid, uuid)
+    def __init__(s, uid, uuid, rid, rd, wc):
+        s.uid = uid
+        s.rid = rid
+        s.uuid = uuid
+        s.wc = wc
+        s.rd = rd
+        s.dbh = data_commit_handle(uid, uuid)
 
-    def _on_heartbeat(M, client: blivedm.BLiveClient, message: web_models.HeartbeatMessage):
+    def _on_heartbeat(s, client: blivedm.BLiveClient, message: web_models.HeartbeatMessage):
         logger.warning(f"[HB] POPPING & COMMIT DATA")
-        M.db_handle.data_commit(M.revert_data)
+        s.dbh.data_commit(s.rd)
 
-    def _on_interact_word(M, client: blivedm.BLiveClient, message: web_models.EnterMessage):
+    def _on_interact_word(s, client: blivedm.BLiveClient, message: web_models.EnterMessage):
         logger.info(f"[ET] {message.uname}({message.uid}) 进入房间")
-        M.revert_data.all_enter += 1
-        M.db_handle.data_enter(message)
+        s.rd.all_enter += 1
+        s.dbh.data_enter(message)
 
-    def _on_danmaku(M, client: blivedm.BLiveClient, message: web_models.DanmakuMessage):
+    def _on_danmaku(s, client: blivedm.BLiveClient, message: web_models.DanmakuMessage):
         logger.info(f"[DM] {message.uname}({message.uid}): {message.msg}")
-        M.revert_data.all_danmaku += 1
-        M.db_handle.data_danmaku(message)
+        s.rd.all_danmaku += 1
+        s.dbh.data_danmaku(message)
 
-    def _on_gift(M, client: blivedm.BLiveClient, message: web_models.GiftMessage):
+    def _on_gift(s, client: blivedm.BLiveClient, message: web_models.GiftMessage):
         logger.info(f"[GF] {message.uname} 赠送 {message.gift_name}x{message.num}"
               f" ({message.coin_type}瓜子x{message.total_coin})")
-        M.revert_data.all_gift += 1
-        M.db_handle.data_gift(message)
+        s.rd.all_gift += 1
+        s.dbh.data_gift(message)
 
-    def _on_buy_guard(M, client: blivedm.BLiveClient, message: web_models.GuardBuyMessage):
+    def _on_buy_guard(s, client: blivedm.BLiveClient, message: web_models.GuardBuyMessage):
         logger.info(f"[GD] {message.username} 购买 {message.gift_name}")
-        M.revert_data.all_guard += 1
-        M.db_handle.data_guard(message)
+        s.rd.all_guard += 1
+        s.dbh.data_guard(message)
 
-    def _on_super_chat(M, client: blivedm.BLiveClient, message: web_models.SuperChatMessage):
+    def _on_super_chat(s, client: blivedm.BLiveClient, message: web_models.SuperChatMessage):
         logger.info(f"[SC] {message.price}¥ {message.uname}: {message.message}")
-        M.revert_data.all_superchat += 1
-        M.db_handle.data_superchat(message)
+        s.rd.all_superchat += 1
+        s.dbh.data_superchat(message)
 
-    def _on_preparing(M, client: blivedm.BLiveClient, message: web_models.PreparingMessage):
-        logger.warning(f"[END] [{M.room_id}] 房间下播，停止接收消息")
-        M.db_handle.data_commit(M.revert_data)
-        M.db_handle.data_finish(M.revert_data)
-        M.work_client.stop()
+    def _on_preparing(s, client: blivedm.BLiveClient, message: web_models.PreparingMessage):
+        logger.warning(f"[END] [{s.rid}] 房间下播，停止接收消息")
+        s.dbh.data_commit(s.rd)
+        s.dbh.data_finish(s.rd)
+        s.wc.stop()
         sys.exit()

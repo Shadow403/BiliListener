@@ -1,8 +1,12 @@
 import sys
+import ctypes
 
 from config import ASCII_LOGO
 from worker.app import worker_initializer
 
+
+kernel32 = ctypes.windll.kernel32
+kernel32.SetConsoleMode(kernel32.GetStdHandle(-10), (0x4|0x80|0x20|0x2|0x10|0x1|0x00|0x100))
 
 def main():
     print(ASCII_LOGO.worker)

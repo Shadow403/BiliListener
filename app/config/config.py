@@ -2,12 +2,10 @@ import os
 from fastapi.openapi.models import Contact
 
 from . import __version__
-from .utils import read_config, init_config
+from .utils import read_config
 
 
 class BaseConfig:
-    init_config()
-
     def __init__(self, config_data):
         __PATH__: str = os.getcwd()
 
@@ -15,6 +13,7 @@ class BaseConfig:
         self.port = config_data["api"]["port"]
         self.appver: str = __version__
         self.perfix: str = "/api"
+        self.tags: list = ["API 💾"]
         self.appname: str = "BiliListener"
         self._c_404: dict = {"code": 404, "message": "notfound", "data": {}}
         self._c_422: dict = {"code": 422, "message": "parm error | method not allowed", "data": {}}
@@ -49,9 +48,11 @@ class BaseConfig:
         }
         self.auth: str = config_data["auth"]
         self.live_push_url: str = "https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids"
-        self.push_query_delay: int = config_data["query_delay"]
+        self.push_query_delay: int = config_data["live_query_delay"]
+        self.live_clear_delay: int = config_data["live_clear_delay"]
 
         self.data_path: str = f"{__PATH__}/{config_data['data']['path']}"
+        self.hide_console: bool = config_data["hide_console"]
 
         self.debug: bool = config_data["debug"]
 
@@ -59,8 +60,7 @@ config: BaseConfig = BaseConfig(read_config())
 
 
 class Router:
-    api_tags: list = ["API 💾"]
-    api_perfix: list = "/api"
+    v1_root: str = f"{config.perfix}/v1"
 
     stats_tags: list = ["STATS 📈"]
     stats_perfix: str = "/stats"

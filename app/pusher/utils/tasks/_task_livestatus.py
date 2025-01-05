@@ -1,8 +1,8 @@
 import subprocess
-from fastapi.logger import logger
+from blivedm import logger
 
+from config import config
 from .utils import func_get_live_status
-
 from database.model import UIDS, LIVE_DATA
 from database.utils import func_generate_uuid
 from database.connector import get_db_config_session
@@ -44,6 +44,10 @@ def live_status_inspectors():
             config_db_session.commit()
 
             command = f"worker.exe {uid} {rid} {live_time}"
-            subprocess.Popen(["cmd", "/c", command], creationflags=subprocess.CREATE_NEW_CONSOLE)
+
+            if config.console:
+                subprocess.Popen(["cmd", "/c", command], creationflags=subprocess.CREATE_NO_WINDOW)
+            else:
+                subprocess.Popen(["cmd", "/c", command], creationflags=subprocess.CREATE_NEW_CONSOLE)
 
             logger.warning(f"STARTING LISTENING {uid}")

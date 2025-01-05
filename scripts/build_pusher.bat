@@ -1,4 +1,8 @@
 @echo off
-title Building Dist......
+title Building pusher......
 
-cd .. && .venv\Scripts\activate && cd app && pyinstaller --onefile pusher.py
+cd ..
+call .venv\Scripts\activate
+cd app
+pyinstaller -i ../scripts/ico/listener.ico --onefile pusher.py
+pause
