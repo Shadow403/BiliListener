@@ -51,9 +51,13 @@ class BaseConfig:
         self.push_query_delay: int = config_data["live_query_delay"]
         self.live_clear_delay: int = config_data["live_clear_delay"]
 
-        self.data_path: str = f"{__PATH__}/{config_data['data']['path']}"
-        self.hide_console: bool = config_data["hide_console"]
+        self.root: str = f"{__PATH__}/{config_data['data']['root']}"
+        self.db_path: str = f"{self.root}/{config_data['data']['db_path']}"
 
+        self.json_enable: bool = config_data["data"]["json"]["enable"]
+        self.json_path: str = f"{self.root}/{config_data['data']['json']['json_path']}"
+        
+        self.hide_console: bool = config_data["hide_console"]
         self.debug: bool = config_data["debug"]
 
 config: BaseConfig = BaseConfig(read_config())
@@ -61,6 +65,7 @@ config: BaseConfig = BaseConfig(read_config())
 
 class Router:
     v1_root: str = f"{config.perfix}/v1"
+    v2_root: str = f"{config.perfix}/v2"
 
     stats_tags: list = ["STATS 📈"]
     stats_perfix: str = "/stats"
