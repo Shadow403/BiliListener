@@ -2,7 +2,7 @@ import os
 
 from config import __version__, __platform__
 
-__ico_path__ = "./build/ico/"
+__ico_path__ = "./scripts/ico/"
 
 def build_pusher():
     _build_ico = f"-i {__ico_path__}listener.ico"
