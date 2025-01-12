@@ -11,7 +11,8 @@ from fastapi.openapi.docs import (
 from .utils import *
 from .base_return import *
 from config import config
-from .router import MRouter
+from .router import MRouter_v1
+from .router import MRouter_v2
 from .router.model.v1._model_api import get_api
 from .utils.tasks import live_status_inspectors, live_clear_inspectors
 
@@ -43,7 +44,8 @@ app = FastAPI(
     description=config.web_desc
 )
 
-app.include_router(MRouter)
+app.include_router(MRouter_v1)
+app.include_router(MRouter_v2)
 
 @app.get(app.swagger_ui_oauth2_redirect_url, include_in_schema=False)
 async def swagger_ui_redirect():

@@ -85,6 +85,26 @@ def ret_205(
         }
     )
 
+def ret_forbiddent():
+    return JSONResponse(
+        status_code=status.HTTP_403_FORBIDDEN,
+        content={
+            "code": 1006,
+            "message": "no permission to access this router",
+            "data": {},
+        }
+    )
+
+def ret_deprecated():
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content={
+            "code": 1007,
+            "message": "deprecated",
+            "data": {},
+        }
+    )
+
 def ret_temp(
         code: int = -1,
         message: str = "[]"

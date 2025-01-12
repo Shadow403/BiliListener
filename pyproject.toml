@@ -18,3 +18,5 @@ email-validator = ">=2.2.0"
 blivedm = {path = "modules/blivedm-1.1.2-py3-none-any.whl"}
 pyinstaller = "^6.11.1"
 pyyaml = "^6.0.2"
+cryptography = "^44.0.0"
+pycryptodome = "^3.21.0"

@@ -10,7 +10,10 @@ def init_config():
     data = {
         "api": {
             "host": "127.0.0.1",
-            "port": 5700
+            "port": 5700,
+            "router_access":{
+                "r_put_uid": ["127.0.0.1"]
+            }
         },
         "live_query_delay": 30,
         "live_clear_delay": 86400,

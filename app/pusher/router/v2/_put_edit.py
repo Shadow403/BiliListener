@@ -1,8 +1,7 @@
-from fastapi import Request
 from fastapi import APIRouter
 
+from config import Router
 from ...base_return import *
-from config import Router, config
 
 from database import *
 from database.model import UIDS
@@ -14,14 +13,10 @@ from ..model.v1._model_del_uid import put_delete_uid
 
 router = APIRouter(prefix=Router.edit_perfix, tags=Router.edit_tags)
 
-@router.put("/add/uid/{uid}", response_model=put_add_uid, deprecated=True)
+@router.put("/add/uid/{uid}", response_model=put_add_uid)
 async def put_add_uid_(
-        uid: int,
-        request: Request
+        uid: int
     ):
-    if request.client.host not in config.acc_put_uid:
-        return ret_forbiddent()
-
     with get_db_config_session() as session:
         is_uid_exists = session.query(UIDS).filter(UIDS.uid == uid).first()
 
@@ -37,14 +32,10 @@ async def put_add_uid_(
             session.commit()
             return ret_200(message="added")
 
-@router.put("/del/uid/{uid}", response_model=put_delete_uid, deprecated=True)
+@router.put("/del/uid/{uid}", response_model=put_delete_uid)
 async def put_delete_uid_(
-        uid: int,
-        request: Request
+        uid: int
     ):
-    if request.client.host not in config.acc_put_uid:
-        return ret_forbiddent()
-
     with get_db_config_session() as session:
         is_uid_exists = session.query(UIDS).filter(UIDS.uid == uid).first()
 
