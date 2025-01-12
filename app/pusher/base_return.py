@@ -2,6 +2,24 @@ from typing import Union
 from fastapi import status
 from fastapi.responses import JSONResponse, Response
 
+def ret_translation(
+        data: None = {}, 
+    ) -> Response:
+
+    return JSONResponse(
+        status_code=status.HTTP_200_OK,
+        content=data
+    )
+
+def ret_200_concatenation(data: None = {}):
+    content = {
+        "code": 0,
+        "message": "success",
+        "data": data
+    }
+
+    return content
+
 def ret_200(
         data: Union[list, dict, str] | None = {}, 
         message: str="success"

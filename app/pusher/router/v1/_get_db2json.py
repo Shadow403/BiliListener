@@ -1,11 +1,12 @@
+import os
+import json
 from fastapi import Query
 from typing import Optional
 from fastapi import APIRouter
 
-from config import Router
 from ...base_return import *
+from config import Router, config
 
-from database import *
 from database.model import *
 from database.connector import get_db_config_session, get_db_worker_session
 
@@ -50,9 +51,28 @@ async def get_live_logs(
     if not live_config_data:
         return ret_203(message="uuid not exists")
 
-    with get_db_worker_session(f"{live_config_data.uid}/{live_uuid}") as worker_db_session:
+    json_uid = live_config_data.uid
+    json_root = f"{config.json_path}/{json_uid}"
+    json_path = f"{json_root}/{live_uuid}_{page}.json"
+
+    if config.json_enable:
+        os.makedirs(json_root, exist_ok=True)
+
+    if config.json_enable and os.path.exists(json_path):
+        with open(json_path, "r", encoding="utf-8") as f:
+            data = json.load(f)
+        return ret_translation(data)
+
+    with get_db_worker_session(f"{json_uid}/{live_uuid}") as worker_db_session:
         page = int(page)
         page_size = 1000
+
+        total_logs = worker_db_session.query(LIVE_LOGS).count()
+        total_pages = (total_logs + page_size - 1) // page_size
+
+        if page > total_pages:
+            return ret_202()
+
         offset = (page - 1) * page_size
         live_logs = worker_db_session.query(LIVE_LOGS).limit(page_size).offset(offset).all()
         live_logs_json = [x.live_logs_json() for x in live_logs]
@@ -61,10 +81,7 @@ async def get_live_logs(
         live_statistics = worker_db_session.query(LIVE_STATISTICS).filter(LIVE_STATISTICS.uuid == live_uuid).first()
         live_statistics_json = live_statistics.live_statistics_json()
 
-        total_logs = worker_db_session.query(LIVE_LOGS).count()
-        total_pages = (total_logs + page_size - 1) // page_size
-
-        full_data = {
+        data = {
             "live_config": {
                 "page_current": page,
                 "page_lasted": total_pages,
@@ -74,4 +91,13 @@ async def get_live_logs(
             "live_logs": live_logs_json_chunks
         }
 
-        return ret_200(full_data)
+        if config.json_enable:
+            with open(json_path, "w", encoding="utf-8") as f:
+                f.write(json.dumps(
+                        ret_200_concatenation(data),
+                        indent=4,
+                        ensure_ascii=False,
+                    )
+                )
+
+    return ret_200(data)

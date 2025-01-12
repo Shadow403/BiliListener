@@ -18,7 +18,12 @@ def init_config():
         "live_query_delay": 30,
         "live_clear_delay": 86400,
         "data": {
-            "path": "data"
+            "root": "data",
+            "db_path": "db",
+            "json": {
+                "enable": False,
+                "json_path": "json"
+            }
         },
         "auth": {
             "sessdata": ""
@@ -30,6 +35,7 @@ def init_config():
     if not os.path.exists(path):
         with open(path, "w") as f:
             yaml.dump(data, f, default_flow_style=False)
+
         print(ASCII_LOGO.pusher)
         print(f"{path} 文件已生成, 请填写SESSDATA\n")
         os.system("pause")

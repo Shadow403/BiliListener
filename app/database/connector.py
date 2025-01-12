@@ -8,10 +8,12 @@ from .model import *
 
 
 def config_database_init():
-    if not os.path.exists(config.data_path):
-        os.makedirs(config.data_path)
+    if not os.path.exists(config.db_path):
+        os.makedirs(config.db_path)
+    if not os.path.exists(config.json_path):
+        os.makedirs(config.json_path)
 
-    database_path = f"{config.data_path}/config.db"
+    database_path = f"{config.db_path}/config.db"
     engine = create_engine(f"sqlite:///{database_path}")
     SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
     config_base.metadata.create_all(engine)
@@ -30,7 +32,7 @@ def get_db_config_session():
 
 
 def worker_database_init(db_name_path):
-    engine = create_engine(f"sqlite:///{config.data_path}/{db_name_path}.db")
+    engine = create_engine(f"sqlite:///{config.db_path}/{db_name_path}.db")
     SessionLocal = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
     data_base.metadata.create_all(engine)
 
