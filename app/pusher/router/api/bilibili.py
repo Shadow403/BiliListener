@@ -8,11 +8,15 @@ asyncClient = httpx.AsyncClient(
     }
 )
 
-class bilibili_api:
+class bilibili_api_:
     def __init__(self):
         self.root = "https://api-dev.shadow403.com.cn/api/bilibili"
 
     async def get_user_baseinfo(self, uid):
-        ret_dict = (await asyncClient.get(f"{self.root}/v1/user/base_info/")).json()
-        return ret_dict
+        ret_dict = (await asyncClient.get(f"{self.root}/v1/user/base_info/{uid}?min=false")).json()
+        if ret_dict["code"] == 0:
+            return ret_dict["data"]
+        else:
+            return None
 
+bilibili_api = bilibili_api_()

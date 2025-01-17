@@ -65,6 +65,11 @@ async def custom_swagger_ui_html():
 
 @app.get(config.perfix, tags=config.tags, response_model=get_api)
 async def read_root():
+    """
+    ### 服务器根节点
+    * 返回服务器时间
+    * 返回服务器NTP时间戳
+    """
     return ret_200(data={
         "server_time": func_time(info=True),
         "server_ntsp": func_time(timestamp=True)

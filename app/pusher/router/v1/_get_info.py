@@ -15,6 +15,9 @@ router = APIRouter(prefix=Router.info_perfix, tags=Router.info_tags)
 
 @router.get("/listening", response_model=get_listening)
 async def get_listening_():
+    """
+    ### 获取正在监听的uid列表
+    """
     with get_db_config_session() as session:
         uid_query_list = session.query(UIDS.uid).filter(UIDS.is_live == True).all()
         uid_list = [uid[0] for uid in uid_query_list]
@@ -23,6 +26,9 @@ async def get_listening_():
 
 @router.get("/uids", response_model=get_uids)
 async def get_uids_():
+    """
+    ### 获取所有可监听uid列表
+    """
     with get_db_config_session() as session:
         uid_query_list = session.query(UIDS.uid).filter(UIDS.is_ban == False).all()
         uid_list = [uid[0] for uid in uid_query_list]

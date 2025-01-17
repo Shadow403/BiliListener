@@ -20,6 +20,10 @@ router = APIRouter(prefix=Router.livelogs_perfix, tags=Router.livelogs_tags)
 async def get_live_config(
         uid: str
     ):
+    """
+    ### 获取直播配置文件
+    - **uid**: 用户id
+    """
     with get_db_config_session() as config_db_session:
         live_config_data = config_db_session.query(LIVE_DATA).filter(
                 LIVE_DATA.uid == uid
@@ -42,7 +46,10 @@ async def get_live_logs(
         live_uuid: str, 
         page: Optional[int] = Query(1, description="页数")
     ):
-
+    """
+    ### 获取直播详细日志
+    - **live_uuid**: 直播uuid
+    """
     with get_db_config_session() as config_db_session:
             live_config_data = config_db_session.query(LIVE_DATA).filter(
                 LIVE_DATA.uuid == live_uuid

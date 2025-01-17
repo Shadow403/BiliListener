@@ -7,11 +7,13 @@ from ..logo import ASCII_LOGO
 
 def init_config():
     path = 'config.yml'
+
     data = {
         "api": {
             "host": "127.0.0.1",
             "port": 5700,
             "router_access":{
+                "strict": True,
                 "r_put_uid": ["127.0.0.1"]
             }
         },

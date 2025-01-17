@@ -9,7 +9,7 @@ from database.model import UIDS
 from database.connector import get_db_config_session
 
 from ..model.v1._model_edit_add import put_add_uid
-from ..model.v1._model_del_uid import put_delete_uid
+from ..model.v1._model_edit_del import put_delete_uid
 
 
 router = APIRouter(prefix=Router.edit_perfix, tags=Router.edit_tags)
@@ -19,7 +19,11 @@ async def put_add_uid_(
         uid: int,
         request: Request
     ):
-    if request.client.host not in config.acc_put_uid:
+    """
+    ### 添加uid
+    - **uid** - 要添加的uid
+    """
+    if request.client.host not in config.acc_put_uid and config.strict:
         return ret_forbiddent()
 
     with get_db_config_session() as session:
@@ -42,7 +46,11 @@ async def put_delete_uid_(
         uid: int,
         request: Request
     ):
-    if request.client.host not in config.acc_put_uid:
+    """
+    ### 删除uid
+    - **uid** - 要删除的uid
+    """
+    if request.client.host not in config.acc_put_uid and config.strict:
         return ret_forbiddent()
 
     with get_db_config_session() as session:

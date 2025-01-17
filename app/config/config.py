@@ -13,6 +13,7 @@ class BaseConfig:
         self.port: int = config_data["api"]["port"]
     
         self.pravite_router: dict = config_data["api"]["router_access"]
+        self.strict: bool = self.pravite_router["strict"]
         self.acc_put_uid: list = self.pravite_router["r_put_uid"]
 
         self.appver: str = __version__
