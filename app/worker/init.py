@@ -17,6 +17,10 @@ def worker_db_initializer(live_config):
         live_statistics = cdb_session.query(
             LIVE_DATA).filter(LIVE_DATA.uuid == uuid).first()
 
+        live_status = cdb_session.query(UIDS).filter(UIDS.uid == uid).first()
+        live_status.is_live = True
+        cdb_session.commit()
+
         if live_statistics == None:
             live_time = live_config["live_time"]
             new_live = LIVE_DATA(
@@ -35,10 +39,6 @@ def worker_db_initializer(live_config):
                 live_tags = live_config["tags"],
                 live_tags_name = live_config["tag_name"]
             )
-
-            live_status_update = cdb_session.query(UIDS).filter(UIDS.uid == uid).first()
-            live_status_update.is_live = True
-
             cdb_session.add(new_live)
             cdb_session.commit()
 

@@ -5,9 +5,11 @@ from blivedm import logger
 from database.model import UIDS
 from config.utils import b64_encode
 from .utils import func_get_live_status
-from config import config, __version__, __platform__
 from database.connector import get_db_config_session
+from config import config, __version__, __platform__, get_type
 
+
+ex = get_type()
 
 def live_status_inspectors():
     with get_db_config_session() as config_db_session:
@@ -18,7 +20,7 @@ def live_status_inspectors():
 
         for x in live_config:
             live_config = b64_encode(str(x))
-            command = f"worker-{__platform__}-{__version__}.exe {live_config}"
+            command = f"worker-{__platform__}-{__version__}-{ex}.exe {live_config}"
             full_cmd = ["cmd", "/c", command]
 
             if config.debug:

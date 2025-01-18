@@ -1,13 +1,10 @@
 import os
 
-from config import __version__, __platform__
+from config import __version__, __platform__, get_type
 
 __ico_path__ = "./scripts/ico/"
 
-if ["a", "b"] in __version__:
-    ex = "experiment"
-else:
-    ex = "release"
+ex = get_type()
 
 def build_pusher():
     _build_ico = f"-i {__ico_path__}listener.ico"
