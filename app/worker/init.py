@@ -2,38 +2,55 @@ import os
 
 from config import config
 
+from database.model import LIVE_DATA, UIDS
 from database.utils import func_generate_uuid
-from database.model import LIVE_STATISTICS, LIVE_DATA
-from database.connector import get_db_worker_session, get_db_config_session
+from database.connector import get_db_config_session
 
 
-def worker_db_initializer(live_uid, live_timestamp):
-    uuid_str = func_generate_uuid(live_uid, live_timestamp)
+def worker_db_initializer(live_config):
+    uid = live_config["uid"]
+    rid = live_config["room_id"]
+    live_timestamp = live_config["live_time"]
+    uuid = func_generate_uuid(uid, live_timestamp)
 
-    if not os.path.exists(f"{config.data_path}/{live_uid}"):
-        os.makedirs(f"{config.data_path}/{live_uid}")
-
-    db_name_path = f"{live_uid}/{uuid_str}"
-    with get_db_worker_session(db_name_path) as worker_db_session:
-        live_statistics = worker_db_session.query(
-            LIVE_STATISTICS).filter(LIVE_STATISTICS.uuid == uuid_str).first()
+    with get_db_config_session() as cdb_session:
+        live_statistics = cdb_session.query(
+            LIVE_DATA).filter(LIVE_DATA.uuid == uuid).first()
 
         if live_statistics == None:
-            new_live = LIVE_STATISTICS(
-                uuid=uuid_str,
+            live_time = live_config["live_time"]
+            new_live = LIVE_DATA(
+                uid = uid,
+                uuid = uuid,
+                name = live_config["uname"],
+                live_time = live_time,
+                live_title = live_config["title"],
+                live_cover_url = live_config["cover_from_user"],
+                live_area = live_config["area"],
+                live_area_name = live_config["area_name"],
+                live_area_v2_id = live_config["area_v2_id"],
+                live_area_v2_name = live_config["area_v2_name"],
+                live_area_v2_parent_id = live_config["area_v2_parent_id"],
+                live_area_v2_parent_name = live_config["area_v2_parent_name"],
+                live_tags = live_config["tags"],
+                live_tags_name = live_config["tag_name"]
             )
-            worker_db_session.add(new_live)
-            worker_db_session.commit()
+
+            live_status_update = cdb_session.query(UIDS).filter(UIDS.uid == uid).first()
+            live_status_update.is_live = True
+
+            cdb_session.add(new_live)
+            cdb_session.commit()
 
         else:
             with get_db_config_session() as config_db_session:
                 live_data = config_db_session.query(
-                    LIVE_DATA).filter(LIVE_DATA.uuid == uuid_str).first()
+                    LIVE_DATA).filter(LIVE_DATA.uuid == uuid).first()
                 if live_data:
                     live_data.if_full = False
                     config_db_session.commit()
 
-        live_statistics_lasted = worker_db_session.query(
-            LIVE_STATISTICS).filter(LIVE_STATISTICS.uuid == uuid_str).first()
+        revert_data = cdb_session.query(
+            LIVE_DATA).filter(LIVE_DATA.uuid == uuid).first()
 
-    return live_statistics_lasted, uuid_str
+    return uid, rid, uuid, revert_data

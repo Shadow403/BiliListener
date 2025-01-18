@@ -32,17 +32,26 @@ class InitHandler(blivedm.BaseHandler):
     def _on_gift(s, client: blivedm.BLiveClient, message: web_models.GiftMessage):
         logger.info(f"[GF] {message.uname} 赠送 {message.gift_name}x{message.num}"
               f" ({message.coin_type}瓜子x{message.total_coin})")
-        s.rd.all_gift += 1
+        s.rd.all_gift += message.num
+
+        if message.coin_type == "gold":
+            s.rd.gold_gift += message.num
+            s.rd.all_price += message.total_coin * message.num
+        else:
+            s.rd.silver_gift += message.num
+
         s.dbh.data_gift(message)
 
     def _on_buy_guard(s, client: blivedm.BLiveClient, message: web_models.GuardBuyMessage):
         logger.info(f"[GD] {message.username} 购买 {message.gift_name}")
-        s.rd.all_guard += 1
+        s.rd.all_guard += message.num
+        s.rd.all_price += message.price * message.num
         s.dbh.data_guard(message)
 
     def _on_super_chat(s, client: blivedm.BLiveClient, message: web_models.SuperChatMessage):
         logger.info(f"[SC] {message.price}¥ {message.uname}: {message.message}")
         s.rd.all_superchat += 1
+        s.rd.all_price += message.price * 1000
         s.dbh.data_superchat(message)
 
     def _on_preparing(s, client: blivedm.BLiveClient, message: web_models.PreparingMessage):

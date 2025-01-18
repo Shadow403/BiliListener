@@ -9,10 +9,10 @@ from .handle import InitHandler
 
 session: Optional[aiohttp.ClientSession] = None
 
-async def started_listening_initializer(uid, uuid, room_id, revert_data):
+async def started_listening_initializer(uid, rid, uuid, revert_data):
     await session_initializer()
     try:
-        await run_single_client(uid, uuid, room_id, revert_data)
+        await run_single_client(uid, uuid, rid, revert_data)
     finally:
         await session.close()
 

@@ -7,8 +7,8 @@ from database import *
 from database.model import UIDS
 from database.connector import get_db_config_session
 
-from ..model.v1._model_listening import get_listening
 from ..model.v1._model_uids import get_uids
+from ..model.v1._model_listening import get_listening
 
 
 router = APIRouter(prefix=Router.info_perfix, tags=Router.info_tags)

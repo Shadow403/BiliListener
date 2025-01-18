@@ -18,7 +18,7 @@ def init_config():
             }
         },
         "live_query_delay": 30,
-        "live_clear_delay": 86400,
+        "live_clear_delay": 300,
         "data": {
             "root": "data",
             "db_path": "db",

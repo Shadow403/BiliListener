@@ -10,18 +10,22 @@ class data_commit_handle:
     def __init__(self, uid, uuid):
         self.uid = uid
         self.uuid = uuid
-        with get_db_worker_session(f"{uid}/{uuid}") as worker_db_session:
+        with get_db_worker_session(uid, uuid) as worker_db_session:
             self.db = worker_db_session
         with get_db_config_session() as config_db_session:
             self.cdb = config_db_session
 
     def data_commit(self, x):
-        d = self.db.query(LIVE_STATISTICS).filter(LIVE_STATISTICS.uuid == self.uuid).first()
-        d.all_gift=x.all_gift
-        d.all_enter=x.all_enter
-        d.all_guard=x.all_guard
-        d.all_danmaku=x.all_danmaku
-        d.all_superchat=x.all_superchat
+        c = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
+        c.all_gift=x.all_gift
+        c.all_price=x.all_price
+        c.gold_gift=x.gold_gift
+        c.silver_gift=x.silver_gift
+        c.all_enter=x.all_enter
+        c.all_guard=x.all_guard
+        c.all_danmaku=x.all_danmaku
+        c.all_superchat=x.all_superchat
+        self.cdb.commit()
         self.db.commit()
 
     def data_enter(self, x):
@@ -87,6 +91,9 @@ class data_commit_handle:
     def data_finish(self, x):
         d = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
         d.all_gift=x.all_gift
+        d.all_price=x.all_price
+        d.gold_gift=x.gold_gift
+        d.silver_gift=x.silver_gift
         d.all_enter=x.all_enter
         d.all_guard=x.all_guard
         d.all_danmaku=x.all_danmaku
@@ -98,3 +105,4 @@ class data_commit_handle:
         c.is_live = False
 
         self.cdb.commit()
+        self.db.commit()

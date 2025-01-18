@@ -61,9 +61,12 @@ class BaseConfig:
 
         self.json_enable: bool = config_data["data"]["json"]["enable"]
         self.json_path: str = f"{self.root}/{config_data['data']['json']['json_path']}"
-        
-        self.hide_console: bool = config_data["hide_console"]
         self.debug: bool = config_data["debug"]
+
+        if self.debug:
+            self.hide_console: bool = False
+        else:
+            self.hide_console: bool = config_data["hide_console"]
 
 config: BaseConfig = BaseConfig(read_config())
 

@@ -39,28 +39,46 @@ class LIVE_LOGS(data_base):
 
         return json_row
 
-class LIVE_STATISTICS(data_base):
-    __tablename__ = "live_statistics"
-    id = Column(Integer, primary_key=True)
-    uuid = Column(String, nullable=False)
+# class LIVE_STATISTICS(data_base):
+#     __tablename__ = "live_statistics"
+#     id = Column(Integer, primary_key=True)
+#     uuid = Column(String, nullable=False)
 
-    all_gift = Column(Integer, default=0)        # 1002
-    all_enter = Column(Integer, default=0)       # 1000
-    all_guard = Column(Integer, default=0)       # 1003
-    all_danmaku = Column(Integer, default=0)     # 1001
-    all_superchat = Column(Integer, default=0)   # 1004
+#     all_gift = Column(Integer, default=0)        # 1002
+#     gold_gift = Column(Integer, default=0)       # 10020
+#     silver_gift = Column(Integer, default=0)     # 10021
+#     all_price = Column(Integer, default=0)       # 1005
+#     all_enter = Column(Integer, default=0)       # 1000
+#     all_guard = Column(Integer, default=0)       # 1003
+#     all_danmaku = Column(Integer, default=0)     # 1001
+#     all_superchat = Column(Integer, default=0)   # 1004
 
-    def live_statistics_json(self):
-        json_row = {
-            # "uuid": self.uuid,
-            "all_gift": self.all_gift,
-            "all_enter": self.all_enter,
-            "all_guard": self.all_guard,
-            "all_danmaku": self.all_danmaku,
-            "all_superchat": self.all_superchat
-        }
+#     def live_statistics_json_v2(self):
+#         json_row = {
+#             "all_gift": {
+#                     "all": self.all_gift,
+#                     "gold": self.gold_gift,
+#                     "silver": self.silver_gift
+#                 },
+#             "all_price": self.all_price,
+#             "all_enter": self.all_enter,
+#             "all_guard": self.all_guard,
+#             "all_danmaku": self.all_danmaku,
+#             "all_superchat": self.all_superchat
+#         }
 
-        return json_row
+#         return json_row
+
+#     def live_statistics_json(self):
+#         json_row = {
+#             "all_gift": self.all_gift,
+#             "all_enter": self.all_enter,
+#             "all_guard": self.all_guard,
+#             "all_danmaku": self.all_danmaku,
+#             "all_superchat": self.all_superchat
+#         }
+
+#         return json_row
 
 # ///
 
@@ -105,6 +123,9 @@ class LIVE_DATA(config_base):
     is_finished = Column(Boolean, default=False)
 
     all_gift = Column(Integer, default=0)        # 1002
+    gold_gift = Column(Integer, default=0)       # 10020
+    silver_gift = Column(Integer, default=0)     # 10021
+    all_price = Column(Integer, default=0)       # 1005
     all_enter = Column(Integer, default=0)       # 1000
     all_guard = Column(Integer, default=0)       # 1003
     all_danmaku = Column(Integer, default=0)     # 1001
@@ -113,8 +134,30 @@ class LIVE_DATA(config_base):
     start_timestamp = Column(Integer, default=func_timestamp())
     end_timestamp = Column(Integer, default=0)
 
-    def live_data_json(self):
-        json_row = {
+    def rank_data_dict(self):
+        dict_row = {
+            "uid": self.uid,
+            "uuid": self.uuid,
+            "name": self.name,
+            "if_full": self.if_full,
+            "live_title": self.live_title,
+            "live_cover_url": self.live_cover_url,
+
+            "all_gift": self.all_gift,
+            "all_price": self.all_price,
+            "all_enter": self.all_enter,
+            "all_guard": self.all_guard,
+            "all_danmaku": self.all_danmaku,
+            "all_superchat": self.all_superchat,
+
+            "start_timestamp": self.live_time,
+            "end_timestamp": self.end_timestamp
+        }
+
+        return dict_row
+
+    def live_data_dict(self):
+        dict_row = {
             "uid": self.uid,
             "uuid": self.uuid,
             "name": self.name,
@@ -134,7 +177,12 @@ class LIVE_DATA(config_base):
             "if_full": self.if_full,
             "is_finished": self.is_finished,
 
-            "all_gift": self.all_gift,
+            "all_gift": {
+                    "all": self.all_gift,
+                    "gold": self.gold_gift,
+                    "silver": self.silver_gift
+                },
+            "all_price": self.all_price,
             "all_enter": self.all_enter,
             "all_guard": self.all_guard,
             "all_danmaku": self.all_danmaku,
@@ -144,4 +192,4 @@ class LIVE_DATA(config_base):
             "end_timestamp": self.end_timestamp
         }
 
-        return json_row
+        return dict_row
