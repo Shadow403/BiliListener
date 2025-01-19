@@ -15,19 +15,6 @@ class data_commit_handle:
         with get_db_config_session() as config_db_session:
             self.cdb = config_db_session
 
-    def data_commit(self, x):
-        c = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
-        c.all_gift=x.all_gift
-        c.all_price=x.all_price
-        c.gold_gift=x.gold_gift
-        c.silver_gift=x.silver_gift
-        c.all_enter=x.all_enter
-        c.all_guard=x.all_guard
-        c.all_danmaku=x.all_danmaku
-        c.all_superchat=x.all_superchat
-        self.cdb.commit()
-        self.db.commit()
-
     def data_enter(self, x):
         row = LIVE_LOGS(
             uid=x.uid,
@@ -49,6 +36,13 @@ class data_commit_handle:
         self.db.add(row)
 
     def data_gift(self, x):
+        if x.coin_type == "gold":
+            coin_type = config._g_gf
+        elif x.coin_type == "silver":
+            coin_type = config._s_gf
+        else:
+            coin_type = config._gf
+
         row = LIVE_LOGS(
             uid=x.uid,
             name=x.uname,
@@ -56,7 +50,7 @@ class data_commit_handle:
             gift_id=x.gift_id,
             gift_name=x.gift_name,
             count=x.num,
-            coin_type=x.coin_type,
+            coin_type=coin_type,
             price=x.total_coin,
             timestamp= x.timestamp
         )
@@ -87,6 +81,21 @@ class data_commit_handle:
             timestamp= x.start_time
         )
         self.db.add(row)
+
+# //
+
+    def data_commit(self, x):
+        c = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
+        c.all_gift=x.all_gift
+        c.all_price=x.all_price
+        c.gold_gift=x.gold_gift
+        c.silver_gift=x.silver_gift
+        c.all_enter=x.all_enter
+        c.all_guard=x.all_guard
+        c.all_danmaku=x.all_danmaku
+        c.all_superchat=x.all_superchat
+        self.cdb.commit()
+        self.db.commit()
 
     def data_finish(self, x):
         d = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()

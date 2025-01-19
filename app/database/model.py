@@ -39,49 +39,6 @@ class LIVE_LOGS(data_base):
 
         return json_row
 
-# class LIVE_STATISTICS(data_base):
-#     __tablename__ = "live_statistics"
-#     id = Column(Integer, primary_key=True)
-#     uuid = Column(String, nullable=False)
-
-#     all_gift = Column(Integer, default=0)        # 1002
-#     gold_gift = Column(Integer, default=0)       # 10020
-#     silver_gift = Column(Integer, default=0)     # 10021
-#     all_price = Column(Integer, default=0)       # 1005
-#     all_enter = Column(Integer, default=0)       # 1000
-#     all_guard = Column(Integer, default=0)       # 1003
-#     all_danmaku = Column(Integer, default=0)     # 1001
-#     all_superchat = Column(Integer, default=0)   # 1004
-
-#     def live_statistics_json_v2(self):
-#         json_row = {
-#             "all_gift": {
-#                     "all": self.all_gift,
-#                     "gold": self.gold_gift,
-#                     "silver": self.silver_gift
-#                 },
-#             "all_price": self.all_price,
-#             "all_enter": self.all_enter,
-#             "all_guard": self.all_guard,
-#             "all_danmaku": self.all_danmaku,
-#             "all_superchat": self.all_superchat
-#         }
-
-#         return json_row
-
-#     def live_statistics_json(self):
-#         json_row = {
-#             "all_gift": self.all_gift,
-#             "all_enter": self.all_enter,
-#             "all_guard": self.all_guard,
-#             "all_danmaku": self.all_danmaku,
-#             "all_superchat": self.all_superchat
-#         }
-
-#         return json_row
-
-# ///
-
 class UIDS(config_base):
     __tablename__ = "uids"
     id = Column(Integer, primary_key=True)

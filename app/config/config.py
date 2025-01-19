@@ -44,6 +44,8 @@ class BaseConfig:
         self._et: int = 1000
         self._dm: int = 1001
         self._gf: int = 1002
+        self._g_gf: int = 10020
+        self._s_gf: int = 10021
         self._gd: int = 1003
         self._sc: int = 1004
 

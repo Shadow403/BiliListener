@@ -19,6 +19,8 @@ async def put_add_uid_(
         uid: int,
         request: Request
     ):
+    return ret_deprecated()
+
     """
     ### 添加uid
     - **uid** - 要添加的uid
@@ -46,6 +48,8 @@ async def put_delete_uid_(
         uid: int,
         request: Request
     ):
+    return ret_deprecated()
+
     """
     ### 删除uid
     - **uid** - 要删除的uid
