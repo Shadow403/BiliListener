@@ -1,6 +1,6 @@
 {
   "name": "web",
-  "version": "0.0.0",
+  "version": "0.2.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,11 +9,20 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@popperjs/core": "^2.11.8",
+    "axios": "^1.7.9",
     "vue": "^3.5.13",
-    "vue-router": "^4.5.0"
+    "vue-router": "^4.5.0",
+    "vue3-count-to": "^1.1.2"
   },
   "devDependencies": {
+    "@vicons/carbon": "^0.13.0",
+    "@vicons/fa": "^0.13.0",
+    "@vicons/fluent": "^0.13.0",
+    "@vicons/ionicons5": "^0.13.0",
     "@vitejs/plugin-vue": "^5.2.1",
+    "naive-ui": "^2.41.0",
+    "vfonts": "^0.0.3",
     "vite": "^6.0.5",
     "vite-plugin-vue-devtools": "^7.6.8"
   }
