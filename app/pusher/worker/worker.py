@@ -9,12 +9,13 @@ from .handle import InitHandler
 
 session: Optional[aiohttp.ClientSession] = None
 
-async def started_listening_initializer(uid, rid, uuid, revert_data):
+async def started_listening_initializer(live_config):
     await session_initializer()
     try:
-        await run_single_client(uid, uuid, rid, revert_data)
+        await run_single_client(live_config)
     finally:
         await session.close()
+    
 
 async def session_initializer():
     cookies = http.cookies.SimpleCookie()
@@ -25,9 +26,9 @@ async def session_initializer():
     session = aiohttp.ClientSession()
     session.cookie_jar.update_cookies(cookies)
 
-async def run_single_client(uid, uuid, room_id, revert_data):
-    client = blivedm.BLiveClient(room_id, session=session)
-    handler = InitHandler(uid, uuid, room_id, revert_data, client)
+async def run_single_client(live_config):
+    client = blivedm.BLiveClient(live_config.rid, session=session)
+    handler = InitHandler(live_config, config.debug)
     client.set_handler(handler)
     client.start()
     await client.join()

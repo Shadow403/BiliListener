@@ -11,6 +11,9 @@ class BaseConfig:
 
         self.host: str = config_data["api"]["host"]
         self.port: int = config_data["api"]["port"]
+        self.ws_port: int = config_data["api"]["ws_port"]
+        self.ws_push_delay: int = config_data["api"]["ws_push_delay"]
+        self.cors: list = config_data["api"]["cors"]
     
         self.pravite_router: dict = config_data["api"]["router_access"]
         self.strict: bool = self.pravite_router["strict"]
@@ -76,6 +79,10 @@ config: BaseConfig = BaseConfig(read_config())
 class Router:
     v1_root: str = f"{config.perfix}/v1"
     v2_root: str = f"{config.perfix}/v2"
+    web_root: str = f"{config.perfix}/web"
+
+    web_tags: list = ["WEB 🌐"]
+    web_perfix: str = ""
 
     stats_tags: list = ["STATS 📈"]
     stats_perfix: str = "/stats"

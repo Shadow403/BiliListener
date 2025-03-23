@@ -12,6 +12,9 @@ def init_config():
         "api": {
             "host": "127.0.0.1",
             "port": 5700,
+            "ws_port": 5701,
+            "ws_push_delay": 5,
+            "cors": ["10.20.0.1"],
             "router_access":{
                 "strict": True,
                 "r_put_uid": ["127.0.0.1"]

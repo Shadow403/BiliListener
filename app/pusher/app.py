@@ -1,7 +1,8 @@
+import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
-from apscheduler.schedulers.background import BackgroundScheduler
 
 from fastapi.openapi.docs import (
     get_swagger_ui_html,
@@ -13,14 +14,9 @@ from .base_return import *
 from config import config
 from .router import MRouter_v1
 from .router import MRouter_v2
+from .router import MRouter_web
 from .router.model.v1._model_api import get_api
-from .utils.tasks import live_status_inspectors, live_clear_inspectors
 
-
-scheduler = BackgroundScheduler()
-scheduler.add_job(live_status_inspectors, "interval", seconds=config.push_query_delay)
-scheduler.add_job(live_clear_inspectors, "interval", seconds=config.live_clear_delay)
-scheduler.start()
 
 _openapi = FastAPI.openapi
 def openapi(self: FastAPI):
@@ -44,8 +40,18 @@ app = FastAPI(
     description=config.web_desc
 )
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=config.cors,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    expose_headers=["*"],
+)
+
 app.include_router(MRouter_v1)
 app.include_router(MRouter_v2)
+app.include_router(MRouter_web)
 
 @app.get(app.swagger_ui_oauth2_redirect_url, include_in_schema=False)
 async def swagger_ui_redirect():
@@ -97,3 +103,6 @@ async def generic_exception_handler(request, exc):
         content=ret_temp(500, "internal server error")
     )
 
+
+def http_server():
+    uvicorn.run(app, host=config.host, port=config.port)

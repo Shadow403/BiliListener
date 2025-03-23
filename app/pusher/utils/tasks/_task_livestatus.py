@@ -1,33 +1,42 @@
-import subprocess
+import time
+import multiprocessing
 from blivedm import logger
 
+from config import config
 from database.model import UIDS
-from config.utils import b64_encode
 from .utils import func_get_live_status
+from ...worker.app import worker_initializer
 from database.connector import get_db_config_session
-from config import config, __version__, __platform__, get_type
 
 
-ex = get_type()
+def live_status_loop():
+    logger.success("START LIVE STATUS LOOP")
+    while True:
+        try:
+            live_status_inspectors()
+            time.sleep(config.push_query_delay)
+        except KeyboardInterrupt:
+            logger.success("STOP LIVE STATUS LOOP")
+            break
 
 def live_status_inspectors():
+    logger.info("QUERY LIVE STATUS")
     with get_db_config_session() as config_db_session:
         uid_query_list = config_db_session.query(UIDS.uid).filter(UIDS.is_live == False, UIDS.is_ban == False).all()
-        uid_list = [uid[0] for uid in uid_query_list]
-        uid_dict = {"uids": uid_list}
-        live_config = func_get_live_status(uid_dict)
 
-        for x in live_config:
-            live_config = b64_encode(str(x))
-            command = f"worker-{__platform__}-{__version__}-{ex}.exe {live_config}"
-            full_cmd = ["cmd", "/c", command]
+    uid_list = [uid[0] for uid in uid_query_list]
+    uid_dict = {"uids": uid_list}
+    live_config = func_get_live_status(uid_dict)
 
-            if config.debug:
-                print(full_cmd)
+    for x in live_config:
+        if config.debug:
+            logger.debug(x)
 
-            if config.hide_console:
-                subprocess.Popen(full_cmd, creationflags=subprocess.CREATE_NO_WINDOW)
-            else:
-                subprocess.Popen(full_cmd, creationflags=subprocess.CREATE_NEW_CONSOLE)
+        with get_db_config_session() as config_db_session:
+            config_db_session.query(UIDS).filter(UIDS.uid == x["uid"]).update({UIDS.is_live: True})
+            config_db_session.commit()
 
-            logger.warning(f"STARTING LISTENING {x['uid']}")
+        process = multiprocessing.Process(target=worker_initializer, args=(x, ))
+        process.start()
+
+        logger.warning(f"STARTING LISTENING {x['uid']}")

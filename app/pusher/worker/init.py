@@ -1,8 +1,4 @@
-import os
-
-from config import config
-
-from database.model import LIVE_DATA, UIDS
+from database.model import LIVE_DATA
 from database.utils import func_generate_uuid
 from database.connector import get_db_config_session
 
@@ -16,10 +12,6 @@ def worker_db_initializer(live_config):
     with get_db_config_session() as cdb_session:
         live_statistics = cdb_session.query(
             LIVE_DATA).filter(LIVE_DATA.uuid == uuid).first()
-
-        live_status = cdb_session.query(UIDS).filter(UIDS.uid == uid).first()
-        live_status.is_live = True
-        cdb_session.commit()
 
         if live_statistics == None:
             live_time = live_config["live_time"]
@@ -53,4 +45,13 @@ def worker_db_initializer(live_config):
         revert_data = cdb_session.query(
             LIVE_DATA).filter(LIVE_DATA.uuid == uuid).first()
 
-    return uid, rid, uuid, revert_data
+    class ret_class:
+        def __init__(self, uid, rid, uuid, revert_data):
+            self.uid = uid
+            self.rid = rid
+            self.uuid = uuid
+            self.revert_data = revert_data
+
+    ret_data = ret_class(uid, rid, uuid, revert_data)
+
+    return ret_data

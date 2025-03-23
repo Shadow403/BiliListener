@@ -16,13 +16,14 @@ class data_commit_handle:
             self.cdb = config_db_session
 
     def data_enter(self, x):
-        row = LIVE_LOGS(
-            uid=x.uid,
-            name=x.uname,
-            type=config._et,
-            timestamp= x.timestamp
-        )
-        self.db.add(row)
+        if x.msg_type == 1:
+            row = LIVE_LOGS(
+                uid=x.uid,
+                name=x.username,
+                type=config._et,
+                timestamp= x.timestamp
+            )
+            self.db.add(row)
 
     def data_danmaku(self, x):
         row = LIVE_LOGS(
