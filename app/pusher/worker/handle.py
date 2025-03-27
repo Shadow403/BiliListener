@@ -54,9 +54,9 @@ class InitHandler(blivedm.BaseHandler):
         self.rd.all_price += message.price * 1000
         self.dbh.data_superchat(message)
 
-    async def _on_preparing(self, client: blivedm.BLiveClient, message: web_models.PreparingMessage):
+    def _on_preparing(self, client: blivedm.BLiveClient, message: web_models.PreparingMessage):
         logger.warning(f"[END] [{self.uid}({self.rid})] 房间下播，停止接收消息")
         self.dbh.data_commit(self.rd)
         self.dbh.data_finish(self.rd)
-        # client.stop()
-        await client.stop_and_close()
+        client.stop()
+        # await client.stop_and_close()

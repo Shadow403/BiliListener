@@ -18,6 +18,12 @@ def live_clear_loop():
             logger.success("STOP LIVE CLEAR LOOP")
             break
 
+def live_status_initializer():
+    # logger.info("CLEAR LIVE STATUS")
+    with get_db_config_session() as config_db_session:
+        config_db_session.query(UIDS).update({UIDS.is_live: False})
+        config_db_session.commit()
+
 def live_clear_inspectors():
     logger.info("CLEAR LIVE STATUS")
     with get_db_config_session() as config_db_session:

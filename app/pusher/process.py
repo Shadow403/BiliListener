@@ -3,9 +3,9 @@ import time
 import multiprocessing
 from blivedm.log import logger
 
+from .utils.tasks import *
 from .router import main as ws
 from .app import http_server as http
-from .utils.tasks import live_clear_loop, live_status_loop
 
 
 def initAll():
@@ -24,6 +24,7 @@ def start_webserver():
     # http_p.join()
 
 def start_tasks():
+    live_status_initializer()
     live_clear = multiprocessing.Process(target=live_clear_loop)
     live_status = multiprocessing.Process(target=live_status_loop)
 

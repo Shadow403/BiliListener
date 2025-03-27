@@ -86,15 +86,15 @@ class data_commit_handle:
 # //
 
     def data_commit(self, x):
-        c = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
-        c.all_gift=x.all_gift
-        c.all_price=x.all_price
-        c.gold_gift=x.gold_gift
-        c.silver_gift=x.silver_gift
-        c.all_enter=x.all_enter
-        c.all_guard=x.all_guard
-        c.all_danmaku=x.all_danmaku
-        c.all_superchat=x.all_superchat
+        d = self.cdb.query(LIVE_DATA).filter(LIVE_DATA.uuid == self.uuid).first()
+        d.all_gift=x.all_gift
+        d.all_price=x.all_price
+        d.gold_gift=x.gold_gift
+        d.silver_gift=x.silver_gift
+        d.all_enter=x.all_enter
+        d.all_guard=x.all_guard
+        d.all_danmaku=x.all_danmaku
+        d.all_superchat=x.all_superchat
         self.cdb.commit()
         self.db.commit()
 
