@@ -15,7 +15,7 @@
   };
 
   const onclickAPI = () => {
-    window.open("https://bililistener.shadow403.com.cn/");
+    window.open("https://api-blistener.shadow403.cn/");
   };
 
   const onclickPython = () => {
