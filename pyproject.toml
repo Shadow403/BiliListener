@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "BiliListener"
-version = "0.2.3"
+version = "0.2.4"
 package-mode = false
-description = "BiliBili异步直播监听程序"
+description = "BiliBili 异步多直播监听程序"
 authors = ["Shadow403 <admin@shadow403.cn>"]
 license = "Apache License 2.0"
 readme = "README.md"
@@ -19,4 +19,5 @@ pyyaml = "^6.0.2"
 cryptography = "^44.0.0"
 pycryptodome = "^3.21.0"
 websockets = "^14.2"
-bili-listener = "^1.1.5"
+bili-listener = "^1.1.6"
+bilibili-api-python = "^17.1.4"

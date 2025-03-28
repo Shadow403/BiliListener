@@ -1,4 +1,5 @@
 import os
+from bilibili_api import Credential, sync
 from fastapi.openapi.models import Contact
 
 from . import __version__
@@ -19,7 +20,7 @@ class BaseConfig:
         self.strict: bool = self.pravite_router["strict"]
         self.acc_put_uid: list = self.pravite_router["r_put_uid"]
 
-        self.appver: str = __version__
+        self.appver: str = __version__ + " "
         self.perfix: str = "/api"
         self.tags: list = ["API 💾"]
         self.appname: str = "BiliListener"
@@ -57,6 +58,8 @@ class BaseConfig:
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36 Edg/103.0.1264.41"
         }
         self.auth: str = config_data["auth"]
+        self.b_bili_jct: str = self.auth["bili_jct"]
+        self.b_sessdata: str = self.auth["sessdata"]
         self.live_push_url: str = "https://api.live.bilibili.com/room/v1/Room/get_status_info_by_uids"
         self.push_query_delay: int = config_data["live_query_delay"]
         self.live_clear_delay: int = config_data["live_clear_delay"]
@@ -72,6 +75,21 @@ class BaseConfig:
             self.hide_console: bool = False
         else:
             self.hide_console: bool = config_data["hide_console"]
+
+    def web_bilibili_authpack(self):
+        authpack = Credential(
+            sessdata=self.b_sessdata, 
+            buvid3=None,
+            bili_jct=self.b_bili_jct, 
+            dedeuserid=None,
+            ac_time_value=None
+        )
+        token_refresh = sync(authpack.check_refresh())
+
+        if token_refresh:
+            authpack = sync(authpack.refresh())
+
+        return authpack
 
 config: BaseConfig = BaseConfig(read_config())
 

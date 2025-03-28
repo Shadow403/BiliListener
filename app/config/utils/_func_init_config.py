@@ -3,6 +3,7 @@ import sys
 import yaml
 
 from ..logo import ASCII_LOGO
+from blivedm.log import logger
 
 
 def init_config():
@@ -14,10 +15,14 @@ def init_config():
             "port": 5700,
             "ws_port": 5701,
             "ws_push_delay": 5,
-            "cors": ["10.20.0.1"],
+            "cors": [
+                    "10.20.0.1"
+                ],
             "router_access":{
                 "strict": True,
-                "r_put_uid": ["127.0.0.1"]
+                "r_put_uid": [
+                    "127.0.0.1"
+                ]
             }
         },
         "live_query_delay": 30,
@@ -31,6 +36,7 @@ def init_config():
             }
         },
         "auth": {
+            "bili_jct": "",
             "sessdata": ""
         },
         "debug": False,
@@ -42,6 +48,6 @@ def init_config():
             yaml.dump(data, f, default_flow_style=False)
 
         print(ASCII_LOGO.pusher)
-        print(f"{path} 文件已生成, 请填写SESSDATA\n")
+        logger.success(f"{path} 文件已生成, 请填写SESSDATA\n")
         os.system("pause")
         sys.exit(0)

@@ -42,5 +42,5 @@ def signal_handler(sig, frame):
         if p.is_alive():
             logger.warning(f"Process {p.name} did not terminate, forcing kill")
             p.kill()
-    time.sleep(5)
+    time.sleep(3)
     sys.exit(0)

@@ -1,7 +1,7 @@
 import platform
 
 
-__version__ = "0.2.3"
+__version__ = "0.2.4"
 __platform__ = platform.system().lower()
 
 

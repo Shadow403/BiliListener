@@ -19,7 +19,7 @@ async def started_listening_initializer(live_config):
 
 async def session_initializer():
     cookies = http.cookies.SimpleCookie()
-    cookies["SESSDATA"] = config.auth["sessdata"]
+    cookies["SESSDATA"] = config.b_sessdata
     cookies["SESSDATA"]["domain"] = "bilibili.com"
 
     global session
