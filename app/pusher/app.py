@@ -1,5 +1,7 @@
 import uvicorn
+import logging
 from fastapi import FastAPI
+from blivedm.log import LoguruHandler
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.exceptions import RequestValidationError
@@ -10,13 +12,14 @@ from fastapi.openapi.docs import (
 )
 
 from .utils import *
+from .router import *
 from .base_return import *
 from config import config
-from .router import MRouter_v1
-from .router import MRouter_v2
-from .router import MRouter_web
 from .router.model.v1._model_api import get_api
 
+logger = logging.getLogger("uvicorn")
+logger.addHandler(LoguruHandler())
+logger.setLevel("INFO")
 
 _openapi = FastAPI.openapi
 def openapi(self: FastAPI):
@@ -49,9 +52,9 @@ app.add_middleware(
     expose_headers=["*"],
 )
 
+app.include_router(MRouter_ws)
 app.include_router(MRouter_v1)
 app.include_router(MRouter_v2)
-app.include_router(MRouter_web)
 
 @app.get(app.swagger_ui_oauth2_redirect_url, include_in_schema=False)
 async def swagger_ui_redirect():
@@ -69,7 +72,7 @@ async def custom_swagger_ui_html():
         swagger_ui_parameters={"defaultModelsExpandDepth": -1}
     )
 
-@app.get(config.perfix, tags=config.tags, response_model=get_api)
+@app.get(config.http_perfix, tags=config.tags, response_model=get_api)
 async def read_root():
     """
     ### 服务器根节点
@@ -103,6 +106,5 @@ async def generic_exception_handler(request, exc):
         content=ret_temp(500, "internal server error")
     )
 
-
-def http_server():
-    uvicorn.run(app, host=config.host, port=config.port)
+def server():
+    uvicorn.run(app, host=config.host, port=config.port, log_config=None)

@@ -12,18 +12,23 @@ class BaseConfig:
 
         self.host: str = config_data["api"]["host"]
         self.port: int = config_data["api"]["port"]
+
         self.ws_port: int = config_data["api"]["ws_port"]
-        self.ws_push_delay: int = config_data["api"]["ws_push_delay"]
-        self.cors: list = config_data["api"]["cors"]
+        self.ws_hub: int = config_data["api"]["ws_push_delay"]["hub"]
+        self.ws_listening: int = config_data["api"]["ws_push_delay"]["listening"]
     
+        self.cors: list = config_data["api"]["cors"]
         self.pravite_router: dict = config_data["api"]["router_access"]
         self.strict: bool = self.pravite_router["strict"]
         self.acc_put_uid: list = self.pravite_router["r_put_uid"]
 
         self.appver: str = __version__ + " "
-        self.perfix: str = "/api"
+        self.ws_perfix: str = ""
+        self.http_perfix: str = "/api"
+
         self.tags: list = ["API 💾"]
         self.appname: str = "BiliListener"
+
         self._c_404: dict = {"code": 404, "message": "notfound", "data": {}}
         self._c_422: dict = {"code": 422, "message": "parm error | method not allowed", "data": {}}
         self._c_500: dict = {"code": 500, "message": "internal server error", "data": {}}
@@ -95,9 +100,14 @@ config: BaseConfig = BaseConfig(read_config())
 
 
 class Router:
-    v1_root: str = f"{config.perfix}/v1"
-    v2_root: str = f"{config.perfix}/v2"
-    web_root: str = f"{config.perfix}/web"
+    v1_root: str = f"{config.http_perfix}/v1"
+    v2_root: str = f"{config.http_perfix}/v2"
+    web_root: str = f"{config.http_perfix}/web"
+
+    ws_v1_root: str = f"{config.ws_perfix}/v1"
+
+    ws_tags: list = ["WS 📡"]
+    ws_perfix: str = "/ws"
 
     web_tags: list = ["WEB 🌐"]
     web_perfix: str = ""

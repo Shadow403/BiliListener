@@ -28,7 +28,7 @@ async def session_initializer():
 
 async def run_single_client(live_config):
     client = blivedm.BLiveClient(live_config.rid, session=session)
-    handler = InitHandler(live_config, config.debug)
+    handler = InitHandler(live_config, config.debug, client)
     client.set_handler(handler)
     client.start()
     await client.join()

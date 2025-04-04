@@ -5,7 +5,7 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Pusher 👨🏻‍⚖️",
+            "name": "Pusher ⚙️",
             "type": "debugpy",
             "request": "launch",
             "program": "pusher.py",
@@ -13,20 +13,11 @@
             "console": "integratedTerminal"
         },
         {
-            "name": "Worker 👩🏻‍🚒",
+            "name": "Build 📦",
             "type": "debugpy",
             "request": "launch",
-            "program": "worker.py",
+            "program": "build.py",
             "cwd": "${workspaceFolder}/app",
-            "console": "integratedTerminal",
-            "args": []
-        },
-        {
-            "name": "Test 🧪",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "${file}",
-            "cwd": "${workspaceFolder}",
             "console": "integratedTerminal",
         }
     ]

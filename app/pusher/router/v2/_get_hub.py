@@ -6,7 +6,7 @@ from database.connector import get_db_config_session
 from config import Router
 from ...base_return import ret_200
 from ...utils._func_time import func_time
-from ..model.web._model_get_hub import get_hub
+from ..model.v2._model_get_hub import get_hub
 
 router = APIRouter(prefix=Router.web_perfix, tags=Router.web_tags)
 

@@ -6,9 +6,10 @@ from .database.data_handle import data_commit_handle
 
 
 class InitHandler(blivedm.BaseHandler):
-    def __init__(self, live_config, debug):
+    def __init__(self, live_config, debug, client):
         super().__init__()
         self.debug = debug
+        self.client = client
         self.uid = live_config.uid
         self.rid = live_config.rid
         self.uuid = live_config.uuid
@@ -58,5 +59,5 @@ class InitHandler(blivedm.BaseHandler):
         logger.warning(f"[END] [{self.uid}({self.rid})] 房间下播，停止接收消息")
         self.dbh.data_commit(self.rd)
         self.dbh.data_finish(self.rd)
-        client.stop()
-        # await client.stop_and_close()
+        self.client.stop()
+        # await self.client.stop_and_close()

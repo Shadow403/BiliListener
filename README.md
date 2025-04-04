@@ -20,37 +20,46 @@ poetry install
 ```
 
 ## 📝 配置
+- 修改 `config.yml` 下的 `auth.bili_jct` 填入`填入已登录B站的 bili_jct`
 - 修改 `config.yml` 下的 `auth.sessdata` 填入`填入已登录B站的 sessdata`
 
 ```yml
 api:
-  host: 127.0.0.1               # api监听地址
-  port: 5700                    # api监听端口
-  router_access:                # api访问权限
-    r_put_uid:                  # 允许访问的IP
-    - 127.0.0.1                 # 允许访问的IP列表
-    strict: true                # 严格模式, 如果为true, 则只有允许的IP可以访问
-auth:                           # 登录信息
-  bili_jct: ''                  # 填入已登录B站的 bili_jct
-  sessdata: ''                  # 填入已登录B站的 sessdata
-data:                           # 数据库配置
-  db_path: db                   # 数据库路径
-  json:                         # json记录配置
-    enable: false               # 是否启用json文件记录
-    json_path: json             # json文件记录路径
-  root: data                    # 监听数据存储路径
-debug: true                     # 是否启用debug模式
-hide_console: true              # 是否隐藏控制台
-live_clear_delay: 300           # 清除直播状态时间(秒)
-live_query_delay: 30            # 查询直播状态时间(秒)
+  cors:                       # 跨域设置
+  - 10.20.0.1                 # 跨域IP列表
+  host: 127.0.0.1             # api监听地址
+  port: 5700                  # api监听端口
+  router_access:              # api访问权限
+    r_put_uid:                # 允许访问的IP
+    - 127.0.0.1               # 允许访问的IP列表
+    strict: true              # 严格模式, 如果为true, 则只有允许的IP可以访问
+  ws_push_delay:              # WebSocket 推送延迟(秒)
+    hub: 5                    # ws_hub 推送延迟(秒)
+    listening: 35             # ws_listening 推送延迟(秒)
+auth:                         # 登录信息
+  bili_jct: ''                # 填入已登录B站的 bili_jct
+  sessdata: ''                # 填入已登录B站的 sessdata
+data:                         # 数据配置
+  db_path: db                 # 数据库路径
+  json:                       # json记录配置
+    enable: false             # 是否启用json文件记录
+    json_path: json           # json文件记录路径
+  root: data                  # 监听数据存储根路径
+debug: false                  # 是否启用debug模式
+hide_console: true            # 是否隐藏控制台
+live_clear_delay: 300         # 清除直播状态时间(秒)
+live_query_delay: 30          # 查询直播状态时间(秒)
 ```
 
 ## 🍻 运行
 - `pusher.py` 监听入口程序
 
 ## 📦 打包
-- `scripts` 目录下
-  - `build.py` 打包
+```python
+poetry shell
+cd app
+python build.py
+```
 
 ## 🎯 功能
 - 入场
@@ -83,7 +92,8 @@ BiliListener
 
 - [x] 打包该项目 📦
 - [x] 支持配置文件 🛠️
-- [ ] 掉线(数据不完整)标记 ☄️
+- [x] 掉线(数据不完整)标记 😢
+- [ ] 分布式监听 ☕
 
 <br>
 
@@ -112,3 +122,5 @@ BiliListener
 - `v0.2.2` ✨ 合并 `pusher` & `worker`
 - `v0.2.3` ✨ 添加 初始化监听 🐍 修复监听完成数据提交失败问题
 - `v0.2.4` 🐍 修复修改 `UID` API
+- `v0.2.5` 🐍 [issues #69](https://github.com/xfgryujk/blivedm/commit/a45ee8f6774064978ba062621475cb78d6e27df8)
+- `v0.2.6` ✨ 添加 `ws` 多路径支持
