@@ -1,6 +1,7 @@
 <script>
 import { darkTheme } from "naive-ui";
-import { defineComponent, onMounted, provide, ref } from "vue";
+import { useRoute } from 'vue-router';
+import { defineComponent, onMounted, provide, ref, computed } from "vue";
 import { Home16Filled, Live24Regular, Search20Filled, Info24Filled } from '@vicons/fluent'
 
 export default defineComponent({
@@ -11,7 +12,23 @@ export default defineComponent({
     Info24Filled
   },
   setup() {
+    const route = useRoute();
     const theme = ref(darkTheme);
+
+    const buttonType = computed(() => {
+      switch(route.path) {
+        case '/':
+          return { home: 'primary', channel: 'default', search: 'default', about: 'default' };
+        case '/channel':
+          return { home: 'default', channel: 'primary', search: 'default', about: 'default' };
+        case '/search':
+          return { home: 'default', channel: 'default', search: 'primary', about: 'default' };
+        case '/about':
+          return { home: 'default', channel: 'default', search: 'default', about: 'primary' };
+        default:
+          return { home: 'default', channel: 'default', search: 'default', about: 'default' };
+      }
+    });
 
     provide('theme', theme);
 
@@ -22,21 +39,21 @@ export default defineComponent({
       }
     });
     return {
-      theme
+      theme,
+      buttonType
     };
   }});
 </script>
-
 
 <template>
   <n-config-provider :theme="theme">
     <n-loading-bar-provider>
     <n-message-provider>
-    <n-layout position="static" id="n-layout-static">
+    <n-layout position="static" class="n-layout-static">
       <n-layout-header bordered>
         <n-space>
           <router-link to="/" tag="n-button">
-            <n-button text tag="index" href="/">
+            <n-button :type="buttonType.home" text tag="index" href="/">
               <template #icon>
                 <n-icon>
                   <Home16Filled />
@@ -46,7 +63,7 @@ export default defineComponent({
             </n-button>
           </router-link>
           <router-link to="/channel" tag="n-button">
-            <n-button text tag="channel">
+            <n-button :type="buttonType.channel" text tag="channel">
               <template #icon>
                 <n-icon>
                   <Live24Regular />
@@ -56,7 +73,7 @@ export default defineComponent({
             </n-button>
           </router-link>
           <router-link to="/search" tag="n-button">
-            <n-button text tag="search">
+            <n-button :type="buttonType.search" text tag="search">
               <template #icon>
                 <n-icon>
                   <Search20Filled />
@@ -66,7 +83,7 @@ export default defineComponent({
             </n-button>
           </router-link>
           <router-link to="/about" tag="n-button">
-            <n-button text tag="about">
+            <n-button :type="buttonType.about" text tag="about">
               <template #icon>
                 <n-icon>
                   <Info24Filled />
@@ -78,7 +95,7 @@ export default defineComponent({
         </n-space>
       </n-layout-header>
     </n-layout>
-    <n-layout position="absolute" id="n-layout-absolute">
+    <n-layout position="absolute" class="n-layout-absolute">
       <n-scrollbar content-style="padding: 12px;">
         <!--  -->
         <RouterView />
@@ -91,12 +108,13 @@ export default defineComponent({
   </n-config-provider>
 </template>
 
+
 <style scoped>
-#n-layout-static {
+.n-layout-static {
   height: 100vh;
 }
 
-#n-layout-absolute {
+.n-layout-absolute {
   height: calc(-50px + 100vh);
   top: 50px;
 }

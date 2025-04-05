@@ -1,14 +1,17 @@
 import { fileURLToPath, URL } from 'node:url'
-
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import vueDevTools from 'vite-plugin-vue-devtools'
 
-const ws_api = 'ws://ws-blistener.shadow403.cn'
-const http_api = 'https://api-blistener.shadow403.cn/api'
+const env = process.env.NODE_ENV
+const ws_api = env === 'production' ? 'ws://ws-blistener.shadow403.cn' : 'ws://127.0.0.1:5700'
+const http_api = env === 'production' ? 'https://api-blistener.shadow403.cn/api' : 'http://127.0.0.1:5700/api'
 
-// https://vite.dev/config/
 export default defineConfig({
+  define: {
+    'import.meta.env.VITE_WS_API': JSON.stringify(ws_api),
+    'import.meta.env.VITE_HTTP_API': JSON.stringify(http_api)
+  },
   plugins: [
     vue(),
     vueDevTools(),
@@ -24,11 +27,6 @@ export default defineConfig({
         target: http_api,
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-      '/ws': {
-        target: ws_api,
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/ws/, ''),
       }
     },
   },

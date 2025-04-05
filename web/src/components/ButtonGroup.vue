@@ -1,5 +1,5 @@
 <script setup>
-  import { ref, watchEffect } from 'vue';
+  import { watchEffect } from 'vue';
   import { NButton, NButtonGroup } from 'naive-ui';
 
   const props = defineProps({
@@ -18,7 +18,8 @@
   const handleClick = (id) => {
     const newButtons = props.buttons.map((button) => ({
       ...button,
-      isClicked: button.id === id
+      isClick: button.id === id,
+      type: button.id === id ? 'primary' : 'default'
     }));
     emit('update:buttons', newButtons);
     emit('button-click', id);
@@ -28,7 +29,7 @@
     if (props.defaultButtonId) {
       const defaultButton = props.buttons.find(button => button.id === props.defaultButtonId);
       if (defaultButton) {
-        defaultButton.isClicked = true;
+        defaultButton.isClick = true;
       }
     }
   });
@@ -39,8 +40,7 @@
     <n-button
       v-for="button in buttons"
       :key="button.id"
-      ghost
-      :type="button.isClicked ? 'primary' : 'default'"
+      :type="button.isClick ? 'primary' : 'default'"
       @click="handleClick(button.id)"
     >
       {{ button.label }}

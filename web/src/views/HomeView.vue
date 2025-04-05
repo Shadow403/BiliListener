@@ -1,46 +1,60 @@
 <script setup>
-  import { ref, onMounted } from "vue"
+  import { ref, onMounted, onBeforeUnmount } from "vue"
   import { useMessage, useLoadingBar } from "naive-ui"
 
-  import { get_hub } from '../utils/api'
   import Annoucement from './Announcement.vue'
 
-  const ret_data = ref({
-    "time": "",
-    "uids": "",
+  const newinitData = ref({
+    "time": "N / A",
+    "uids": 0,
     "live_count": 0,
     "uids_listening": 0,
     "total": {
+      "enter": 0,
       "danmaku": 0
     }
   })
 
-  const color = ref('#d03050')
-  const blow_id = ref('disable')
-
+  let socket = null
   const loading = ref(true)
   const message = useMessage()
-  const loadingLine = useLoadingBar()
-  const adduid = () => {
-    message.info('点这里没用')
-  }
+  const loadLine = useLoadingBar()
+  const countToDuration = ref(2000)
+  const breathLight = ref("disable")
+  const breathColor = ref("#D03050")
+  const oldInitData = ref(newinitData.value)
+  const adduid = () => {message.info('点这里没用')}
 
   onMounted(async () => {
-    loadingLine.start()
-    try {
-      const response = await get_hub()
-      
-      color.value = '#18a058'
-      blow_id.value = 'enable'
-      ret_data.value = response.data
-    } catch (e) {
-      loadingLine.error();
-    } finally {
-      loadingLine.finish();
-      loading.value = false
+    loadLine.start()
+    const wsUrl = import.meta.env.VITE_WS_API + "/v1/ws/hub"
+    if (!socket) {
+      socket = new WebSocket(wsUrl)
+      socket.onmessage = (event) => {
+        const data = JSON.parse(event.data)
+        oldInitData.value = { ...newinitData.value }
+        newinitData.value = data.data
+        breathLight.value = "enable"
+        breathColor.value = "#18A058"
+        loadLine.finish();
+        loading.value = false
+      }
+      socket.onerror = (e) => {
+        loadLine.error();
+        loading.value = true
+        message.error("连接失败")
+      }
+    }
+  })
+
+  onBeforeUnmount(() => {
+    if (socket) {
+      socket.close()
+      socket = null
     }
   })
 </script>
+
 
 
 <template>
@@ -63,29 +77,32 @@
           <n-space>
             数据
             <time>
-              {{ ret_data.time }}
+              {{ newinitData.time }}
             </time>
           </n-space>
         </template>
         <template #header-extra>
           <div>
-            <n-badge :color="color" dot :id="blow_id" />
+            <n-badge :color="breathColor" dot :id="breathLight" />
           </div>
         </template>
         <n-skeleton v-if="loading" text :repeat="3" />
           <template v-else>
             <n-space style="display: flex; flex-flow: wrap; justify-content: space-between; gap: 8px 12px;">
               <n-statistic label="收录">
-                <count-to :startVal="0" :endVal="ret_data.uids" :duration="2000" />
+                <count-to :startVal="oldInitData.uids" :endVal="newinitData.uids" :duration="countToDuration" />
               </n-statistic>
               <n-statistic label="监听中">
-                <count-to :startVal="0" :endVal="ret_data.uids_listening" :duration="2000" />
+                <count-to :startVal="oldInitData.uids_listening" :endVal="newinitData.uids_listening" :duration="countToDuration" />
               </n-statistic>
               <n-statistic label="总场次">
-                <count-to :startVal="0" :endVal="ret_data.live_count" :duration="2000" />
+                <count-to :startVal="oldInitData.live_count" :endVal="newinitData.live_count" :duration="countToDuration" />
+              </n-statistic>
+              <n-statistic label="总入场">
+                <count-to :startVal="oldInitData.total.enter" :endVal="newinitData.total.enter" :duration="countToDuration" />
               </n-statistic>
               <n-statistic label="总弹幕">
-                <count-to :startVal="0" :endVal="ret_data.total.danmaku" :duration="2000" />
+                <count-to :startVal="oldInitData.total.danmaku" :endVal="newinitData.total.danmaku" :duration="countToDuration" />
               </n-statistic>
             </n-space>
           </template>

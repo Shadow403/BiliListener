@@ -124,3 +124,4 @@ BiliListener
 - `v0.2.4` 🐍 修复修改 `UID` API
 - `v0.2.5` 🐍 [issues #69](https://github.com/xfgryujk/blivedm/commit/a45ee8f6774064978ba062621475cb78d6e27df8)
 - `v0.2.6` ✨ 添加 `ws` 多路径支持
+- `v0.2.6` 🌐 更新前端

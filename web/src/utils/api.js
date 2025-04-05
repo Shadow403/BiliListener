@@ -1,16 +1,5 @@
 import axios from 'axios'
 
-
-export const get_hub = async () => {
-  try {
-    const ret = await axios.get('/api/web/hub')
-    return ret.data
-  } catch (error) {
-    console.error('[Fetch HUB Error]: ', error)
-    throw error
-  }
-}
-
 export const get_uids = async () => {
   try {
     const ret = await axios.get('/api/v1/info/uids')
@@ -20,17 +9,6 @@ export const get_uids = async () => {
     throw error
   }
 }
-
-export const get_time = async () => {
-  try {
-    const ret = await axios.get('/api')
-    return ret.data
-  } catch (error) {
-    console.error('[Fetch TIME Error]: ', error)
-    throw error
-  }
-}
-
 
 export const get_listening = async () => {
   try {
